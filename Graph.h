@@ -109,6 +109,10 @@ public:
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void fordFulkerson(T source, T target);
+	void dijkstraShortestPath(const T &origin);
+	Vertex<T> * initSingleSource(const T &origin);
+	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
+	vector<T> getPath(const T &origin, const T &dest) const;
 
 };
 
@@ -159,5 +163,73 @@ void Graph<T>::fordFulkerson(T source, T target) {
     // TODO
 }
 
+/**
+* Initializes single-source shortest path data (path, dist).
+* Receives the content of the source vertex and returns a pointer to the source vertex.
+* Used by all single-source shortest path algorithms.
+*/
+template<class T>
+Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
+	for (auto v : vertexSet) {
+		v->dist = INF;
+		v->path = nullptr;
+	}
+	auto s = findVertex(origin);
+	s->dist = 0;
+	return s;
+}
+
+/**
+* Analyzes an edge in single-source shortest path algorithm.
+* Returns true if the target vertex was relaxed (dist, path).
+* Used by all single-source shortest path algorithms.
+*/
+template<class T>
+bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
+	if (v->dist + weight < w->dist) {
+		w->dist = v->dist + weight;
+		w->path = v;
+		return true;
+	}
+	else
+		return false;
+}
+
+/**
+* Dijkstra algorithm.
+*/
+template<class T>
+void Graph<T>::dijkstraShortestPath(const T &origin) {
+	auto s = initSingleSource(origin);
+	MutablePriorityQueue<Vertex<T>> q;
+	q.insert(s);
+	while (!q.empty()) {
+		auto v = q.extractMin();
+		for (auto e : v->adj) {
+			auto oldDist = e.dest->dist;
+			if (relax(v, e.dest, e.weight)) {
+				if (oldDist == INF)
+					q.insert(e.dest);
+				else
+					q.decreaseKey(e.dest);
+			}
+		}
+	}
+}
+
+/**
+* Get path from vertex origin to vertex dest
+*/
+template<class T>
+vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
+	vector<T> res;
+	auto v = findVertex(dest);
+	if (v == nullptr || v->dist == INF) // missing or disconnected
+		return res;
+	for (; v != nullptr; v = v->path)
+		res.push_back(v->info);
+	reverse(res.begin(), res.end());
+	return res;
+}
 
 #endif /* GRAPH_H_ */
