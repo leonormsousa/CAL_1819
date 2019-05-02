@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <string>
 #include "Tourist.h"
 
 using namespace std;
@@ -8,10 +5,13 @@ using namespace std;
 class Bus{
 private:
     int id;
-    int capacidade;
+    int capacity;
     vector<Tourist*> tourists;
 public:
-    Bus(int id, int capacidade, vector<Tourist*> t);
+    Bus(int id, int capacity, vector<Tourist*> t = {});
+    int getId();
+    int getCapacity();
     void addTourist(Tourist* t);
     void removeTourist(Tourist * t);
-}
+    bool operator==(Bus b);
+};

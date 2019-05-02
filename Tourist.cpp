@@ -1,6 +1,4 @@
-
 #include"Tourist.h"
-#include<algorithm>
 
 using namespace std;
 
