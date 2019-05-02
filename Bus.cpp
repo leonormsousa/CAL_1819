@@ -1,10 +1,20 @@
 #include "Bus.h"
 
-Bus::Bus(int id, int capacidade, vector<Tourist*> t = {})
+Bus::Bus(int id, int capacity, vector<Tourist*> t = {})
 {
     this->id=id;
-    this->capacidade=capacidade;
+    this->capacity=capacity;
     this->tourists=t;
+}
+
+int Bus::getId()
+{
+    return id;
+}
+
+int Bus::getCapacity()
+{
+    return capacity;
 }
 
 void Bus::addTourist(Tourist* t)
@@ -14,12 +24,13 @@ void Bus::addTourist(Tourist* t)
 
 void Bus::removeTourist(Tourist * t)
 {
-    for (auto it=tourists.begin(); it!=tourists.end(); it++)
-    {
-        if (*it == t)
-        {
-            tourists.erase(it);
-            break;
-        }
-    }
+    auto it=find(tourists.begin(), tourists.end(), t);
+    tourists.erase(it);
+}
+
+bool Bus::operator==(Bus b)
+{
+    if (id == b.getId())
+        return true;
+    return false;
 }
