@@ -15,4 +15,5 @@ public:
     void addTourist(int id, string nome);
     void removeTourist(int id);
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
+    vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
 };
