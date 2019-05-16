@@ -27,3 +27,9 @@ void Company::removeTourist(int id)
     auto it=find(tourists.begin(), tourists.end(), Tourist(id, ""));
     tourists.erase(it);
 }
+
+vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
+{
+    map.dijkstraShortestPath(point1);
+    return map.getPath(point1, point2);
+}
