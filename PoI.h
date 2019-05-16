@@ -6,9 +6,10 @@ using namespace std;
 
 class PoI{
     int id;
-    string name;
+    int x;
+    int y;
+    string tipo;
 public:
-    PoI(int id, string name) { this->id=id; this->name=name;}
-    int getId() { return id; }
-    string getName() { return name; }
+    PoI(int id, int x, int y) { this->id=id; this->x=x; this->y=y;}
+    int getId(){return id;}
 };
