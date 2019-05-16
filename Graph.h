@@ -108,7 +108,6 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
-	void fordFulkerson(T source, T target);
 	void dijkstraShortestPath(const T &origin);
 	Vertex<T> * initSingleSource(const T &origin);
 	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
@@ -149,19 +148,6 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
 }
 
-
-/**
- * Finds the maximum flow in a graph using the Ford Fulkerson algorithm
- * (with the improvement of Edmonds-Karp).
- * Assumes that the graph forms a flow network from source vertex 's'
- * to sink vertex 't' (distinct vertices).
- * Receives as arguments the source and target vertices (identified by their contents).
- * The result is defined by the "flow" field of each edge.
- */
-template <class T>
-void Graph<T>::fordFulkerson(T source, T target) {
-    // TODO
-}
 
 /**
 * Initializes single-source shortest path data (path, dist).
