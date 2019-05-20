@@ -4,7 +4,7 @@
 
 class Company{
 private:
-    Graph<PoI> map;
+    Graph<PoI*> map;
     vector<Bus> buses;
     vector<Tourist> tourists;
     vector<PoI> pois;
@@ -15,5 +15,7 @@ public:
     void removeBus(int id);
     void addTourist(int id, string nome);
     void removeTourist(int id);
-    void initializeGraph(char* filename);
+    void initializeGraph(char* edgeFile, char* vertexFile, char* tagFile);
+    vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
+    int findPoI(int id);
 };
