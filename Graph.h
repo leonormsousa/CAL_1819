@@ -8,6 +8,7 @@
 #include <queue>
 #include <limits>
 #include <cmath>
+#include "MutablePriorityQueue.h"
 
 using namespace std;
 
@@ -110,6 +111,8 @@ public:
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void fordFulkerson(T source, T target);
 	void dijkstraShortestPath(const T &origin);
+	void AStarShortestPath(const T &origin);
+	float euclidiandistance(const T &origin, const T &destination);
 	Vertex<T> * initSingleSource(const T &origin);
 	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
 	vector<T> getPath(const T &origin, const T &dest) const;
@@ -242,7 +245,8 @@ void Graph<T>::AStarShortestPath(const T &origin) {
 /**
 * Euclidian distance between two nodes
 */
-float Graph<PoI>::euclidiandistance(const PoI &origin, const PoI &destination) {
+template<class T>
+float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
 	return sqrt(pow(destination.getX() - origin.getX(), 2) + pow(destination.getX() - origin.getY(), 2));
 }
 
