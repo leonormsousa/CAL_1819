@@ -114,3 +114,20 @@ vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
     map.dijkstraShortestPath(point1);
     return map.getPath(point1, point2);
 }
+
+vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
+{
+    vector<vector<PoI*> > auxVector;
+    vector<PoI*> resp;
+    for (int i=0; i<points.size()-1; i++)
+        auxVector.push_back(calculateRouteBetweenTwoPoints(points[i], points[i+1]));
+    if (auxVector.size()==0)
+        return resp;
+    resp=auxVector[0];
+    for (int i=0; i<auxVector.size(); i++)
+    {
+        auxVector[i].erase(auxVector[i].begin());
+        resp.insert(resp.end(), auxVector[i].begin(), auxVector[i].end());
+    }
+    return resp;
+}

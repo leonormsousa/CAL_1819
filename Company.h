@@ -18,4 +18,5 @@ public:
     void initializeGraph(char* edgeFile, char* vertexFile, char* tagFile);
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     int findPoI(int id);
+    vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
 };

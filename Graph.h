@@ -8,6 +8,7 @@
 #include <queue>
 #include <limits>
 #include <cmath>
+#include "MutablePriorityQueue.h"
 
 using namespace std;
 
@@ -109,6 +110,8 @@ public:
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void dijkstraShortestPath(const T &origin);
+	void AStarShortestPath(const T &origin);
+	float euclidiandistance(const T &origin, const T &destination);
 	Vertex<T> * initSingleSource(const T &origin);
 	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
 	vector<T> getPath(const T &origin, const T &dest) const;
@@ -201,6 +204,36 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 			}
 		}
 	}
+}
+
+/**
+* A* algorithm.
+*/
+template<class T>
+void Graph<T>::AStarShortestPath(const T &origin) {
+	auto s = initSingleSource(origin);
+	MutablePriorityQueue<Vertex<T>> q;
+	q.insert(s);
+	while (!q.empty()) {
+		auto v = q.extractMin();
+		for (auto e : v->adj) {
+			auto oldDist = e.dest->dist + euclidiandistance(v, e);
+			if (relax(v, e.dest, e.weight)) {
+				if (oldDist == INF)
+					q.insert(e.dest);
+				else
+					q.decreaseKey(e.dest);
+			}
+		}
+	}
+}
+
+/**
+* Euclidian distance between two nodes
+*/
+template<class T>
+float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
+	return sqrt(pow(destination.getX() - origin.getX(), 2) + pow(destination.getX() - origin.getY(), 2));
 }
 
 /**
