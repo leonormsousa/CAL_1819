@@ -218,6 +218,35 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 }
 
 /**
+* A* algorithm.
+*/
+template<class T>
+void Graph<T>::AStarShortestPath(const T &origin) {
+	auto s = initSingleSource(origin);
+	MutablePriorityQueue<Vertex<T>> q;
+	q.insert(s);
+	while (!q.empty()) {
+		auto v = q.extractMin();
+		for (auto e : v->adj) {
+			auto oldDist = e.dest->dist + euclidiandistance(v, e);
+			if (relax(v, e.dest, e.weight)) {
+				if (oldDist == INF)
+					q.insert(e.dest);
+				else
+					q.decreaseKey(e.dest);
+			}
+		}
+	}
+}
+
+/**
+* Euclidian distance between two nodes
+*/
+float Graph<PoI>::euclidiandistance(const PoI &origin, const PoI &destination) {
+	return sqrt(pow(destination.getX() - origin.getX(), 2) + pow(destination.getX() - origin.getY(), 2));
+}
+
+/**
 * Get path from vertex origin to vertex dest
 */
 template<class T>
