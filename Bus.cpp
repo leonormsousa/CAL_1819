@@ -1,6 +1,6 @@
 #include "Bus.h"
 
-Bus::Bus(int id, int capacity, vector<Tourist*> t = {})
+Bus::Bus(int id, int capacity, vector<Tourist*> t)
 {
     this->id=id;
     this->capacity=capacity;

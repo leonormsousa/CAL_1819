@@ -107,6 +107,7 @@ class Graph {
 	Vertex<T>* findVertex(const T &inf) const;
 public:
 	vector<Vertex<T> *> getVertexSet() const;
+	double getEdgeWeigth(const T &sourc, const T &dest);
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void dijkstraShortestPath(const T &origin);
@@ -117,6 +118,18 @@ public:
 	vector<T> getPath(const T &origin, const T &dest) const;
 
 };
+
+template <class T>
+double Graph<T>::getEdgeWeigth(const T &sourc, const T &dest)
+{
+	auto s = findVertex(sourc);
+	for (auto it=s->getAdj().begin(); it!=s->getAdj().end(); i++)
+	{
+		if (*(it->getDest())== dest);
+			return it->capacity;
+	}
+	return -1;
+}
 
 template <class T>
 Vertex<T> * Graph<T>::addVertex(const T &in) {

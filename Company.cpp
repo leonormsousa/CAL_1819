@@ -1,6 +1,6 @@
 #include "Company.h"
 
-Company::Company(vector<Tourist> t = {}, vector<Bus> b = {})
+Company::Company(vector<Tourist> t, vector<Bus> b)
 {
 	tourists = t;
 	buses = b;
@@ -132,14 +132,67 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     return resp;
 }
 
-vector<PoI*> Company::calculateRouteWithUnorderedPoints (vector<PoI*> points)
+double Company::getWeigth(vector<PoI*> pois)
+{
+    int resp=0;
+    for (int i=0; i<pois.size()-1;i++)
+    {
+        double aux=map.getEdgeWeigth((pois[i]), (pois[i+1]));
+		if (aux == -1)
+			return -1;
+        resp+=aux;
+    }
+	return resp;
+}
+
+void Company::dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& v, vector<vector<PoI*> > &res)
+{
+    if (depth == s)
+    {
+        do
+        {
+            res.push_back(c);
+        }
+        while (next_permutation(c.begin(), c.end()));
+    }
+    else
+    {
+        for (int j = i + 1; j < (int)v.size(); ++j)
+        {
+            c.push_back(v[j]);
+            dfs(depth + 1, s, j, c, v, res);
+            c.pop_back();
+        }
+    }
+}
+
+vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> points)
 {
     vector<vector<PoI*> > vectorAux;
+    vector<vector<PoI*> > resps;
+    vector<PoI*> resp;
+    vector<PoI*> auxp=points;
     if (points.size()<=2)
         return points;
     PoI* point1= points[0];
     PoI* point2 = points[points.size()-1];
-
+    auxp.erase(points.begin());
+    auxp.erase(points.begin()+points.size()-1);
+    vector<PoI*> aux;
+    dfs(0, points.size()-2, -1, aux, points, vectorAux);
+    for (int i=0; i<vectorAux.size(); i++)
+    {
+        vectorAux[i].insert(vectorAux[i].begin(), point1);
+        vectorAux[i].insert(vectorAux[i].end(), point2);
+        resps.push_back(calculateRouteWithOrderedPoints(vectorAux[i]));
+    }
+    resp=resps[0];
+    for (int i=0; i<resps.size(); i++)
+    {
+        if (getWeigth(resps[i])<getWeigth(resp))
+            resp=resps[i];
+    }
+    return resp;
 }
 
 int C(vector<PoI*> pois, PoI* point1)

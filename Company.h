@@ -19,5 +19,7 @@ public:
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     int findPoI(int id);
     vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
+	void dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& v, vector<vector<PoI*> > &res);
+	double getWeigth(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
 };
