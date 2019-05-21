@@ -18,5 +18,9 @@ public:
     void setY(float y) { this->y=y;}
     void setID(int id) {this->id=id;}
     void setType(string type) {tipo = type;}
-
+    bool operator==(PoI p){
+        if (id == p.getId())
+        return true;
+    return false;
+    }
 };

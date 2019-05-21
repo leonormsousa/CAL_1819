@@ -8,10 +8,11 @@ class Tourist{
     string name;
     vector<PoI*> poIs;
 public:
-	Tourist(int id, string name, vector<PoI> poIs = {});
-    void addPoI(PoI n);
-    void removePoI(PoI n);
+	Tourist(int id, string name, vector<PoI*> poIs = {});
+    void addPoI(PoI* n);
+    void removePoI(PoI* n);
     int getId(); 
     string getName();
     vector<PoI*> getPoIs();
+    bool operator==(Tourist t);
 };

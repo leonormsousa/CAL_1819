@@ -24,19 +24,24 @@ constexpr auto INF = std::numeric_limits<double>::max();
  */
 template <class T>
 class Vertex {
+	int queueIndex = 0; 		// required by MutablePriorityQueue
 	T info;
 	vector<Edge<T> *> outgoing;  // adj
 	vector<Edge<T> *> incoming;
+	double dist = 0;
 	Edge<T> * addEdge(Vertex<T> *dest, double c, double f);
-	Vertex(T in);
-
 	bool visited;  // for path finding
-	Edge<T> *path; // for path finding
+	Vertex<T> *path = nullptr;
 
 public:
+	Vertex(T in);
 	T getInfo() const;
 	vector<Edge<T> *> getAdj() const;
+	double getDist() const;
 	friend class Graph<T>;
+	friend class MutablePriorityQueue<Vertex<T>>;
+	bool operator<(Vertex<T> & vertex) const; //  required by MutablePriorityQueue
+
 };
 
 
@@ -59,7 +64,7 @@ T Vertex<T>::getInfo() const {
 
 template <class T>
 vector<Edge<T> *> Vertex<T>::getAdj() const {
-	return this->outgoing;
+	return outgoing;
 }
 
 
@@ -69,30 +74,28 @@ vector<Edge<T> *> Vertex<T>::getAdj() const {
  */
 template <class T>
 class Edge {
-	Vertex<T> * orig;
-	Vertex<T> * dest;
-	double capacity;
-	double flow;
-	Edge(Vertex<T> *o, Vertex<T> *d, double c, double f=0);
+		Vertex<T> *orig; 
+	Vertex<T> * dest;      // destination vertex
+	double weight;         // edge weight
+	bool selected; 
 
 public:
-	double getFlow() const;
-	Vertex<T> *getDest() const;
-
+	Edge(Vertex<T> *o, Vertex<T> *d, double w, double f);
 	friend class Graph<T>;
 	friend class Vertex<T>;
+	double getWeight() const;
+	Vertex<T>* getDest();
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *o, Vertex<T> *d, double w, double f): orig(o), dest(d), capacity(w), flow(f){}
+Edge<T>::Edge(Vertex<T> *o, Vertex<T> *d, double w, double f) : orig(o), dest(d), weight(w) {}
 
 template <class T>
-double Edge<T>::getFlow() const {
-	return flow;
+double Edge<T>::getWeight() const {
+	return weight;
 }
-
 template <class T>
-Vertex<T>* Edge<T>::getDest() const {
+Vertex<T>* Edge<T>::getDest(){
 	return dest;
 }
 
@@ -107,7 +110,7 @@ class Graph {
 	Vertex<T>* findVertex(const T &inf) const;
 public:
 	vector<Vertex<T> *> getVertexSet() const;
-	double getEdgeWeigth(const T &sourc, const T &dest);
+	double getEdgeWeight(const T &sourc, const T &dest);
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
 	void dijkstraShortestPath(const T &origin);
@@ -120,13 +123,15 @@ public:
 };
 
 template <class T>
-double Graph<T>::getEdgeWeigth(const T &sourc, const T &dest)
+double Graph<T>::getEdgeWeight(const T &sourc, const T &dest)
 {
 	auto s = findVertex(sourc);
-	for (auto it=s->getAdj().begin(); it!=s->getAdj().end(); i++)
+	//for (auto it=s->getAdj().begin(); it!=s->getAdj().end(); it++)
+	for(size_t i = 0; i < s->getAdj().size(); i++)
 	{
-		if (*(it->getDest())== dest);
-			return it->capacity;
+		//if (*(it->getDest())== dest);
+		if(s->getAdj()[i]->getDest()->getInfo() == dest)
+			return s->getAdj()[i]->getWeight();
 	}
 	return -1;
 }
@@ -207,13 +212,13 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 	q.insert(s);
 	while (!q.empty()) {
 		auto v = q.extractMin();
-		for (auto e : v->adj) {
-			auto oldDist = e.dest->dist;
-			if (relax(v, e.dest, e.weight)) {
+		for (auto e : v->outgoing) {
+			auto oldDist = e->dest->dist;
+			if (relax(v, e->dest, e->weight)) {
 				if (oldDist == INF)
-					q.insert(e.dest);
+					q.insert(e->dest);
 				else
-					q.decreaseKey(e.dest);
+					q.decreaseKey(e->dest);
 			}
 		}
 	}
@@ -229,7 +234,7 @@ void Graph<T>::AStarShortestPath(const T &origin) {
 	q.insert(s);
 	while (!q.empty()) {
 		auto v = q.extractMin();
-		for (auto e : v->adj) {
+		for (auto e : v->outgoing) {
 			auto oldDist = e.dest->dist + euclidiandistance(v, e);
 			if (relax(v, e.dest, e.weight)) {
 				if (oldDist == INF)

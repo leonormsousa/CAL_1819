@@ -132,12 +132,12 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     return resp;
 }
 
-double Company::getWeigth(vector<PoI*> pois)
+double Company::getWeight(vector<PoI*> pois)
 {
     int resp=0;
     for (int i=0; i<pois.size()-1;i++)
     {
-        double aux=map.getEdgeWeigth((pois[i]), (pois[i+1]));
+        double aux=map.getEdgeWeight((pois[i]), (pois[i+1]));
 		if (aux == -1)
 			return -1;
         resp+=aux;
@@ -189,7 +189,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     resp=resps[0];
     for (int i=0; i<resps.size(); i++)
     {
-        if (getWeigth(resps[i])<getWeigth(resp))
+        if (getWeight(resps[i])<getWeight(resp))
             resp=resps[i];
     }
     return resp;
