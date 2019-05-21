@@ -38,10 +38,10 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
 {
     vector<vector<PoI*> > auxVector;
     vector<PoI*> resp;
+    if (points.size()<=2)
+        return points;
     for (int i=0; i<points.size()-1; i++)
         auxVector.push_back(calculateRouteBetweenTwoPoints(points[i], points[i+1]));
-    if (auxVector.size()==0)
-        return resp;
     resp=auxVector[0];
     for (int i=0; i<auxVector.size(); i++)
     {
@@ -49,4 +49,25 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
         resp.insert(resp.end(), auxVector[i].begin(), auxVector[i].end());
     }
     return resp;
+}
+
+vector<PoI*> Company::calculateRouteWithUnorderedPoints (vector<PoI*> points)
+{
+    vector<vector<PoI*> > vectorAux;
+    if (points.size()<=2)
+        return points;
+    PoI* point1= points[0];
+    PoI* point2 = points[points.size()-1];
+
+}
+
+int C(vector<PoI*> pois, PoI* point1)
+{
+    for (int s=1; s<pois.size(); s++)
+    {
+        vector<PoI*> aux=pois;
+        aux.resize(s+1);
+        //for (auto it=)
+
+    }
 }

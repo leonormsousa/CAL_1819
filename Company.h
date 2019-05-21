@@ -16,4 +16,5 @@ public:
     void removeTourist(int id);
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
+    vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
 };
