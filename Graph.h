@@ -8,6 +8,7 @@
 #include <queue>
 #include <limits>
 #include <cmath>
+#include "MutablePriorityQueue.h"
 
 using namespace std;
 
@@ -108,8 +109,9 @@ public:
 	vector<Vertex<T> *> getVertexSet() const;
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
-	void fordFulkerson(T source, T target);
 	void dijkstraShortestPath(const T &origin);
+	void AStarShortestPath(const T &origin);
+	float euclidiandistance(const T &origin, const T &destination);
 	Vertex<T> * initSingleSource(const T &origin);
 	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
 	vector<T> getPath(const T &origin, const T &dest) const;
@@ -149,19 +151,6 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
 }
 
-
-/**
- * Finds the maximum flow in a graph using the Ford Fulkerson algorithm
- * (with the improvement of Edmonds-Karp).
- * Assumes that the graph forms a flow network from source vertex 's'
- * to sink vertex 't' (distinct vertices).
- * Receives as arguments the source and target vertices (identified by their contents).
- * The result is defined by the "flow" field of each edge.
- */
-template <class T>
-void Graph<T>::fordFulkerson(T source, T target) {
-    // TODO
-}
 
 /**
 * Initializes single-source shortest path data (path, dist).
@@ -215,6 +204,36 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 			}
 		}
 	}
+}
+
+/**
+* A* algorithm.
+*/
+template<class T>
+void Graph<T>::AStarShortestPath(const T &origin) {
+	auto s = initSingleSource(origin);
+	MutablePriorityQueue<Vertex<T>> q;
+	q.insert(s);
+	while (!q.empty()) {
+		auto v = q.extractMin();
+		for (auto e : v->adj) {
+			auto oldDist = e.dest->dist + euclidiandistance(v, e);
+			if (relax(v, e.dest, e.weight)) {
+				if (oldDist == INF)
+					q.insert(e.dest);
+				else
+					q.decreaseKey(e.dest);
+			}
+		}
+	}
+}
+
+/**
+* Euclidian distance between two nodes
+*/
+template<class T>
+float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
+	return sqrt(pow(destination.getX() - origin.getX(), 2) + pow(destination.getX() - origin.getY(), 2));
 }
 
 /**
