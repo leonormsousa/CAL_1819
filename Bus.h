@@ -5,7 +5,6 @@ using namespace std;
 class Bus{
 private:
     int id;
-    int capacity;
     vector<Tourist*> tourists;
 public:
     Bus(int id, vector<Tourist*> t = {});

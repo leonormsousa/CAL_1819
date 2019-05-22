@@ -5,9 +5,6 @@
 
 using namespace std;
 
-int main(){
-
-
 void funcionalidades(Company &p)
 {
 	while (true)
@@ -186,21 +183,20 @@ int main()
 	// // gv->setBackground("image.png");
 	// gv->rearrange();
 	// sleep(5);
-	// gv->closeWindow();
+	gv->closeWindow();
   
-		cout << "==========================" << endl;
-		cout << "===  CITY SIGHTSEEING  ===" << endl;
-		cout << "==========================" << endl;
+	cout << "==========================" << endl;
+	cout << "===  CITY SIGHTSEEING  ===" << endl;
+	cout << "==========================" << endl;
 
-        Company p = Company();
-        funcionalidades(p);
-            
-        cout << "=======================================================================================================" << endl << endl;
-        cout << "Program developed by: " << endl;
-        cout << "Joao Praca" << endl <<  "Leonor M. Sousa" << endl << "Silvia Rocha" << endl <<
-                "Informatics and Computing Engineering Students in the Faculty of Engineering of the University of Porto"<< endl << endl;
-        return 0;
-                
+
+	funcionalidades(p);
+
+	cout << "=======================================================================================================" << endl << endl;
+	cout << "Program developed by: " << endl;
+	cout << "Joao Praca" << endl <<  "Leonor M. Sousa" << endl << "Silvia Rocha" << endl <<
+			"Informatics and Computing Engineering Students in the Faculty of Engineering of the University of Porto"<< endl << endl;
+
 		
 	return 0;
 }
