@@ -30,7 +30,7 @@ void Company::removeTourist(int id)
 
 int Company::findPoI(int id)
 {
-    for(int i=0; i<pois.size();i++)
+    for(size_t i=0; i<pois.size();i++)
     {
         if(pois[i].getId()==id)
             return i;
@@ -47,7 +47,6 @@ void Company::initializeGraph(char* edgesFile, char* vertexFile, char* tagFile){
     }
 
     string word, line;
-    int i;
     
     getline(vertex, line);
     for(int i=0; i< stoi(line);i++)
@@ -70,7 +69,7 @@ void Company::initializeGraph(char* edgesFile, char* vertexFile, char* tagFile){
         getline(edges, word);
         string src = word.substr(1,word.find_first_not_of("0123456789",1));
         string dest= word.substr(src.size()+3,word.find_first_not_of("0123456789",src.size()+3));
-        for(int j=0; j<pois.size();j++)
+        for(size_t j=0; j<pois.size();j++)
         {
             if(stoi(src)==pois[j].getId())
             {
@@ -121,10 +120,10 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     vector<PoI*> resp;
     if (points.size()<=2)
         return points;
-    for (int i=0; i<points.size()-1; i++)
+    for (size_t i=0; i<points.size()-1; i++)
         auxVector.push_back(calculateRouteBetweenTwoPoints(points[i], points[i+1]));
     resp=auxVector[0];
-    for (int i=0; i<auxVector.size(); i++)
+    for (size_t i=0; i<auxVector.size(); i++)
     {
         auxVector[i].erase(auxVector[i].begin());
         resp.insert(resp.end(), auxVector[i].begin(), auxVector[i].end());
@@ -134,8 +133,8 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
 
 double Company::getWeight(vector<PoI*> pois)
 {
-    int resp=0;
-    for (int i=0; i<pois.size()-1;i++)
+    double resp=0;
+    for (size_t i=0; i<pois.size()-1;i++)
     {
         double aux=map.getEdgeWeight((pois[i]), (pois[i+1]));
 		if (aux == -1)
@@ -180,28 +179,17 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     auxp.erase(points.begin()+points.size()-1);
     vector<PoI*> aux;
     dfs(0, points.size()-2, -1, aux, points, vectorAux);
-    for (int i=0; i<vectorAux.size(); i++)
+    for (size_t i=0; i<vectorAux.size(); i++)
     {
         vectorAux[i].insert(vectorAux[i].begin(), point1);
         vectorAux[i].insert(vectorAux[i].end(), point2);
         resps.push_back(calculateRouteWithOrderedPoints(vectorAux[i]));
     }
     resp=resps[0];
-    for (int i=0; i<resps.size(); i++)
+    for (size_t i=0; i<resps.size(); i++)
     {
         if (getWeight(resps[i])<getWeight(resp))
             resp=resps[i];
     }
     return resp;
-}
-
-int C(vector<PoI*> pois, PoI* point1)
-{
-    for (int s=1; s<pois.size(); s++)
-    {
-        vector<PoI*> aux=pois;
-        aux.resize(s+1);
-        //for (auto it=)
-
-    }
 }

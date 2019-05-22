@@ -67,6 +67,15 @@ vector<Edge<T> *> Vertex<T>::getAdj() const {
 	return outgoing;
 }
 
+template <class T>
+double Vertex<T>::getDist() const {
+	return dist;
+}
+
+template<class T>
+bool Vertex<T>::operator<(Vertex<T> & vertex) const {
+	return info < vertex.getInfo();
+}
 
 /* ================================================================================================
  * Class Edge
