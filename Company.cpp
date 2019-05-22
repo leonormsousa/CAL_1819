@@ -1,4 +1,5 @@
 #include "Company.h"
+#include <iomanip>
 
 Company::Company(vector<Tourist> t, vector<Bus> b)
 {
@@ -56,18 +57,21 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
     string word, line;
     
     getline(vertex, line);
+	cout << "alo" << endl;
     for(int i=0; i< stoi(line);i++)
     {
         getline(vertex, word);
-        string id = word.substr(1,word.find_first_not_of("0123456789",1));        
-        string src= word.substr(id.size()+3,word.find_first_not_of("0123456789.",id.size()+3));
-        string dest = word.substr(id.size()+src.size()+5,word.find_first_not_of("0123456789.",id.size()+src.size()+5));
+		word = word.substr(1);
+        string id = word.substr(0,word.find_first_not_of("0123456789",1)-1);
+		word = word.substr(id.size());
+        string src= word.substr(3,word.find_first_of(",",id.size())- 3);
+		word = word.substr(src.size()+5);
+        string dest = word.substr(0,word.find_first_not_of("0123456789.",0));
 
-        PoI vertex(stoi(id),stof(src),stof(dest));
+        PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
         map.addVertex(&vertex);
     }
-
     getline(edges, line);
     for(int i=0; i< stoi(line);i++)
     {
@@ -92,10 +96,9 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
                 destination.setY(pois[j].getY());
             }
         }
-        float distance= sqrt(pow(destination.getX()-source.getX(),2)+ pow(destination.getY()-source.getY(),2));
+        double distance= sqrt(pow(destination.getX()-source.getX(),2)+ pow(destination.getY()-source.getY(),2));
         map.addEdge(&source, &destination, distance);
     }
-
     getline(tags, line);
     for(int i=0; i<stoi(line);i++)
     {
@@ -113,7 +116,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
             pois[PoI].setType(word);
         }
     }
-
+	cout << "alo3" << endl;
 }
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
