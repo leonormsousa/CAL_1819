@@ -37,7 +37,11 @@ int Company::findPoI(int id)
     }
     return -1;
 }
-void Company::initializeGraph(char* edgesFile, char* vertexFile, char* tagFile){
+
+vector<PoI> Company::getPois(){
+    return pois;
+}
+void Company::initializeGraph(string edgesFile, string vertexFile, string tagFile){
     fstream edges(edgesFile);
     fstream vertex(vertexFile);
     fstream tags(tagFile);
