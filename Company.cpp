@@ -42,10 +42,13 @@ vector<PoI> Company::getPois(){
     return pois;
 }
 void Company::initializeGraph(string edgesFile, string vertexFile, string tagFile){
-    fstream edges(edgesFile);
-    fstream vertex(vertexFile);
-    fstream tags(tagFile);
-    if (!edges || !vertex || !tags) {
+    ifstream edges;
+    edges.open(edgesFile);
+    ifstream vertex;
+    vertex.open(vertexFile);
+    ifstream tags;
+    tags.open(tagFile);
+    if (edges.fail() || vertex.fail() || tags.fail()) {
         //ocorreu um erro
         return;
     }
