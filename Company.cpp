@@ -124,6 +124,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
         }
     }
 }
+
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
     map.dijkstraShortestPath(point1);
