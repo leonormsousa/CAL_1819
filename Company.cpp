@@ -30,7 +30,7 @@ void Company::removeTourist(int id)
     tourists.erase(it);
 }
 
-int Company::findPoI(int id)
+int Company::findPoIindex(int id)
 {
     for(size_t i=0; i<pois.size();i++)
     {
@@ -115,7 +115,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
         {
             string poi;
             getline(tags, poi);
-            int PoI = findPoI(stoi(poi));
+            int PoI = findPoIindex(stoi(poi));
             if(PoI<0)
             {
                 cout << "POI doesnt exist"<< endl;
@@ -273,4 +273,10 @@ void Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
     {
         routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
     }
+}
+
+PoI* Company::findPoI(int id)
+{
+	PoI poi = PoI(id, 0, 0);
+	return find(pois.begin(), pois.end(), poi);
 }
