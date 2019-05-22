@@ -9,6 +9,8 @@ private:
     vector<Tourist> tourists;
     vector<PoI> pois;
     vector <vector <PoI*> > routes;
+    vector <vector <Tourist *> > tourist_groups;
+    int busesCapacity;
 public:
 	Company(vector<Tourist> t = {}, vector<Bus> b = {});
     vector<PoI> getPois();
@@ -23,5 +25,6 @@ public:
 	void dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& v, vector<vector<PoI*> > &res);
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
-    vector<vector<Tourist*> > TouristGroups(unsigned int tolerance);
+    vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);
+    void createGroupsBasedOnBuses(unsigned int tolerance);
 };

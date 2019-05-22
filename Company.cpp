@@ -205,9 +205,8 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     return resp;
 }
 
-vector<vector<Tourist*> > Company::TouristGroups(unsigned int tolerance){
+vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes){
     vector<Tourist> tous=tourists;
-    vector<vector <PoI*> > routes;
     vector<vector<Tourist*> > touristGroups;
 	auto it = tous.begin();
     while (it!=tous.end())//; it++)
@@ -238,4 +237,34 @@ vector<vector<Tourist*> > Company::TouristGroups(unsigned int tolerance){
 		it++;
     }
 	return touristGroups;
+}
+
+void Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
+    vector<vector<Tourist*> > touristGroups, oldTouristGroups;
+    vector<vector <PoI*> > routess, oldRoutes;
+    oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes);
+    do
+    {
+        initialTolerance--;
+        touristGroups=createTouristGroups(initialTolerance, routess);
+        if (routess.size()>buses.size())
+            break;
+        if (touristGroups.size()>busesCapacity)
+            break;   
+    }while (touristGroups.size()>buses.size());
+    do
+    {
+        initialTolerance++;
+        touristGroups=createTouristGroups(initialTolerance, routess);
+        if (routess.size()>buses.size())
+            break;
+        if (touristGroups.size()>busesCapacity)
+            break;   
+    }while (touristGroups.size()<oldTouristGroups.size());
+    routes=oldRoutes;
+    tourist_groups=oldTouristGroups;
+    for (size_t i=0; i<routes.size(); i++)
+    {
+        routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
+    }
 }
