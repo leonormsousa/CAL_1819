@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void funcionalidades(Company &p)
+void features(Company &p)
 {
 	while (true)
 	{
@@ -46,7 +46,7 @@ void funcionalidades(Company &p)
 			cin >> id;
 			cout << endl;
 			p.addBus(stoi(id));
-			
+			break;
 		}
 		case 2: {
             string nome, id;
@@ -150,6 +150,95 @@ void funcionalidades(Company &p)
 	}
 }
 
+string getMapName()
+{
+	while (true)
+		{
+		  try
+		  {
+			int option;
+
+			cout << endl << "Escolha um mapa (numero):" << endl;
+			cout << "1 - Aveiro " << endl;
+			cout << "2 - Braga " << endl;
+			cout << "3 - Coimbra " << endl;
+			cout << "4 - Ermesinde " << endl;
+			cout << "5 - Fafe " << endl;
+			cout << "6 - Gondomar " << endl;
+			cout << "7 - Lisboa " << endl;
+			cout << "8 - Maia  " << endl;
+			cout << "9 - Porto " << endl;
+			cout << "10 - Portugal " << endl;
+			cout << "11 - Viseu " << endl;
+
+			//cout << "0 - Exit" << endl << endl;
+			cout << endl << "Opcao? ";
+			cin >> option;
+			option = toupper(option);
+			while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) && (option != 12) && (option != 13) && (option != 14) && (option != 15) && (option != 16) && (option != 17) && (option != 18) && (option != 19) && (option != 20)))
+			{
+				cin.clear();
+				cin.ignore(100000, '\n');
+				cout << endl << "Invalid Input" << endl;
+				cout << "Option? ";
+				cin >> option;
+			}
+			switch (option)
+			{
+			case 1: {
+				return "Aveiro";
+				break;
+			}
+			case 2: {
+	            return "Braga";
+				break;
+			}
+			case 3: {
+				return "Coimbra";
+				break;
+			}
+			case 4: {
+				return "Ermesinde";
+				break;
+			}
+	        case 5: {
+	            return "Fafe";
+	            break;
+	        }
+	        case 6:{
+	            return "Gondomar";
+	            break;
+	        }
+	        case 7: {
+	        	return "Lisboa";
+	            break;
+	        }
+	        case 8:{
+	        	return "Maia";
+	            break;
+	        }
+	        case 9: {
+	        	return "Porto";
+	            break;
+	        }
+	        case 10:{
+	        	return "Portugal";
+	            break;
+	        }
+	        case 11: {
+	        	return "Viseu";
+	            break;
+	        }
+
+			}
+		  }
+
+		  	catch (exception &e)
+		  	{
+		  		e.what();
+		  	}
+		}
+}
 
 int main()
 {
@@ -166,11 +255,7 @@ int main()
 	cout << "===  CITY SIGHTSEEING  ===" << endl;
 	cout << "==========================" << endl;
 
-	string cidade;
-
-	cout << endl << "Choose a city: ";
-	cin >> cidade;
-	cout << endl;
+	string city = getMapName();
 
 	GraphViewer * gv = new GraphViewer(600, 600, true);
 	gv->createWindow(600, 600);
@@ -178,11 +263,11 @@ int main()
 	gv->defineEdgeColor("black");
 
 	Company p = Company();
-	string edgeFile= "T03/" + cidade + "/T03_Edges_" + cidade + ".txt";
-	string vertexFile= "T03/" + cidade + "/T03_Nodes_X_Y_" + cidade + ".txt";
-	string tagsFile= "T03/" + cidade + "/T03_tags_" + cidade + ".txt";
+	string edgeFile= "T03/" + city + "/T03_Edges_" + city + ".txt";
+	string vertexFile= "T03/" + city + "/T03_Nodes_X_Y_" + city + ".txt";
+	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
-	cout << edgeFile << endl << endl;
+	cout << endl << edgeFile << endl << endl;
 
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
@@ -203,7 +288,7 @@ int main()
 	//sleep(5);
 	//gv->closeWindow();
 
-	funcionalidades(p);
+	features(p);
 
 	cout << endl << "=======================================================================================================" << endl << endl;
 	cout << "Program developed by: " << endl;

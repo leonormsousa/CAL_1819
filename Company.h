@@ -12,7 +12,7 @@ private:
     vector <vector <Tourist *> > tourist_groups;
     int busesCapacity;
 public:
-	Company(vector<Tourist> t = {}, vector<Bus> b = {});
+	Company(vector<Tourist> t = {}, vector<Bus> b = {}, int capacity = 20);
     vector<PoI> getPois();
     void addBus(int id);
     void removeBus(int id);

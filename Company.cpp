@@ -1,10 +1,11 @@
 #include "Company.h"
 #include <iterator>
 
-Company::Company(vector<Tourist> t, vector<Bus> b)
+Company::Company(vector<Tourist> t, vector<Bus> b, int capacity)
 {
 	tourists = t;
 	buses = b;
+	busesCapacity = capacity;
 }
     
 void Company::addBus(int id)
@@ -95,7 +96,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 		vector<PoI>::iterator it = find(pois.begin(), pois.end(), source);
 		
 		destination.setID(stoi(src));
-		auto it2 = find(pois.begin(), pois.end(), destination);
+		vector<PoI>::iterator it2 = find(pois.begin(), pois.end(), destination);
 
 		double distance = sqrt(pow(it2->getX() - it->getX(), 2) + pow(it2->getY() - it->getY(), 2));
 
@@ -215,9 +216,8 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
     vector<Tourist> tous=tourists;
     vector<vector<Tourist*> > touristGroups;
 	auto it = tous.begin();
-    while (it!=tous.end())//; it++)
+    while (it!=tous.end())
     {
-        unsigned int tol=tolerance;
         vector<PoI*> auxp;
         vector<Tourist*> auxt;
         auxt.push_back(&(*find(tourists.begin(), tourists.end(), *it)));

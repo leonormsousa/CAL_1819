@@ -30,7 +30,7 @@ class Vertex {
 	vector<Edge<T> *> incoming;
 	double dist = 0;
 	Edge<T> * addEdge(Vertex<T> *dest, double c, double f);
-	bool visited;  // for path finding
+	bool visited = false;  // for path finding
 	Vertex<T> *path = nullptr;
 
 public:
