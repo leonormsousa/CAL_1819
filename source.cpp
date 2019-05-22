@@ -10,9 +10,6 @@ int main(){
     string tagsFile= "T03/Aveiro/T03_tags_Aveiro.txt";
 
     p.initializeGraph(edgeFile, vertexFile, tagsFile);
-    for(int i=0; i< p.getPois().size();i++)
-    {
-        cout << p.getPois()[i].getId() << endl;
-    }
+  
     return 0;
 }

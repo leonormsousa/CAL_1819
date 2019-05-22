@@ -1,5 +1,4 @@
 #include "Company.h"
-#include <iomanip>
 
 Company::Company(vector<Tourist> t, vector<Bus> b)
 {
@@ -55,62 +54,63 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
     }
 
     string word, line;
-    
+	cout << "Reading poi..." << endl;
     getline(vertex, line);
-	cout << "alo" << endl;
     for(int i=0; i< stoi(line);i++)
     {
         getline(vertex, word);
 		word = word.substr(1);
-        string id = word.substr(0,word.find_first_not_of("0123456789",1)-1);
-		word = word.substr(id.size());
-        string src= word.substr(3,word.find_first_of(",",id.size())- 3);
-		word = word.substr(src.size()+5);
+        string id = word.substr(0,word.find_first_not_of("0123456789",1));
+		word = word.substr(id.size()+2);
+        string src= word.substr(0,word.find_first_of(","));
+		word = word.substr(src.size()+2);
         string dest = word.substr(0,word.find_first_not_of("0123456789.",0));
 
         PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
         map.addVertex(&vertex);
     }
+
+	cout << "Reading edges..." << endl;
     getline(edges, line);
     for(int i=0; i< stoi(line);i++)
     {
-        PoI source(0,0,0); 
+		PoI source =PoI(0, 0, 0);
+
         PoI destination(0,0,0);
         getline(edges, word);
-        string src = word.substr(1,word.find_first_not_of("0123456789",1));
-        string dest= word.substr(src.size()+3,word.find_first_not_of("0123456789",src.size()+3));
-        for(size_t j=0; j<pois.size();j++)
-        {
-            if(stoi(src)==pois[j].getId())
-            {
-                source.setID(pois[j].getId());
-                source.setX(pois[j].getX());
-                source.setY(pois[j].getY());
-            }
-    
-            if(stoi(dest)==pois[j].getId())
-            {
-                destination.setID(pois[j].getId());
-                destination.setX(pois[j].getX());
-                destination.setY(pois[j].getY());
-            }
-        }
-        double distance= sqrt(pow(destination.getX()-source.getX(),2)+ pow(destination.getY()-source.getY(),2));
-        map.addEdge(&source, &destination, distance);
+		word = word.substr(1);
+        string src = word.substr(0,word.find_first_not_of("0123456789",0));
+		word = word.substr(src.size()+2);
+        string dest= word.substr(0,word.find_first_not_of("0123456789",0));
+
+		source.setID(stoi(src));
+		vector<PoI>::iterator it = find(pois.begin(), pois.end(), source);
+		
+		destination.setID(stoi(src));
+		auto it2 = find(pois.begin(), pois.end(), destination);
+
+		double distance = sqrt(pow(it2->getX() - it->getX(), 2) + pow(it2->getY() - it->getY(), 2));
+
+		map.addEdge(&(*it), &(*it2), distance);
+
     }
+
+	cout << "Reading tags..." << endl;
     getline(tags, line);
+	string numLines;
     for(int i=0; i<stoi(line);i++)
-    {
+    {	
         getline(tags,word);
-        for(int j=0; j<stoi(word);j++)
+		getline(tags, numLines);
+        for(int j=0; j<stoi(numLines);j++)
         {
             string poi;
             getline(tags, poi);
             int PoI = findPoI(stoi(poi));
             if(PoI<0)
             {
-                printf("POI doesnt exist");
+                cout << "POI doesnt exist"<< endl;
                 return;
             }
             pois[PoI].setType(word);
