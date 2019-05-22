@@ -12,6 +12,7 @@
 #include <netdb.h>
 #else
 #include <winsock2.h>
+#include<winerror.h>
 #endif
 
 #include <string>

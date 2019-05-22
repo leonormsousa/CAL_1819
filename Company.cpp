@@ -274,3 +274,20 @@ void Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
         routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
     }
 }
+
+bool Company::addUnavailableRoad(Edge<PoI*> edge){
+	vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
+	if(it==unavailableRoads.end()){
+		unavailableRoads.push_back(edge);
+		return true;
+	}
+	return false;
+}
+ bool Company::removeUnavailableRoad(Edge<PoI*> edge){
+	 vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
+	 	if(it!=unavailableRoads.end()){
+	 		unavailableRoads.erase(it);
+	 		return true;
+	 	}
+	 	return false;
+ }

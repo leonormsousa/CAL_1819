@@ -8,6 +8,7 @@ private:
     vector<Bus> buses;
     vector<Tourist> tourists;
     vector<PoI> pois;
+    vector<Edge<PoI*>> unavailableRoads;
     vector <vector <PoI*> > routes;
     vector <vector <Tourist *> > tourist_groups;
     int busesCapacity;
@@ -19,6 +20,8 @@ public:
     void addTourist(int id, string nome);
     void removeTourist(int id);
     vector<Tourist> getTourists();
+    bool addUnavailableRoad(Edge<PoI*>);
+    bool removeUnavailableRoad(Edge<PoI*>);
     void initializeGraph(string edgeFile, string vertexFile, string tagFile);
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     int findPoI(int id);
