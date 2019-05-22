@@ -7,14 +7,14 @@ Company::Company(vector<Tourist> t, vector<Bus> b)
 	buses = b;
 }
     
-void Company::addBus(int id, int capacity)
+void Company::addBus(int id)
 {
-    buses.push_back(Bus(id, capacity));
+    buses.push_back(Bus(id));
 }
     
 void Company::removeBus(int id)
 {
-    auto it = find(buses.begin(), buses.end(), Bus(id, 0));
+    auto it = find(buses.begin(), buses.end(), Bus(id));
     buses.erase(it);
 }
 
@@ -42,6 +42,12 @@ int Company::findPoI(int id)
 vector<PoI> Company::getPois(){
     return pois;
 }
+
+vector<Tourist> Company::getTourists(){
+    return tourists;
+}
+
+
 void Company::initializeGraph(string edgesFile, string vertexFile, string tagFile){
     ifstream edges;
     edges.open(edgesFile);
@@ -117,7 +123,6 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
             pois[PoI].setType(word);
         }
     }
-	cout << "alo3" << endl;
 }
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {

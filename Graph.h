@@ -245,7 +245,7 @@ void Graph<T>::AStarShortestPath(const T &origin) {
 		auto v = q.extractMin();
 		for (auto e : v->outgoing) {
 			auto oldDist = e.dest->dist + euclidiandistance(v, e);
-			if (relax(v, e.dest, e.weight)) {
+			if (relax(v, e.->dest, e.weight)) {
 				if (oldDist == INF)
 					q.insert(e.dest);
 				else

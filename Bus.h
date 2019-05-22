@@ -8,9 +8,8 @@ private:
     int capacity;
     vector<Tourist*> tourists;
 public:
-    Bus(int id, int capacity, vector<Tourist*> t = {});
+    Bus(int id, vector<Tourist*> t = {});
     int getId();
-    int getCapacity();
     void addTourist(Tourist* t);
     void removeTourist(Tourist * t);
     bool operator==(Bus b);

@@ -1,20 +1,14 @@
 #include "Bus.h"
 
-Bus::Bus(int id, int capacity, vector<Tourist*> t)
+Bus::Bus(int id, vector<Tourist*> t)
 {
     this->id=id;
-    this->capacity=capacity;
     this->tourists=t;
 }
 
 int Bus::getId()
 {
     return id;
-}
-
-int Bus::getCapacity()
-{
-    return capacity;
 }
 
 void Bus::addTourist(Tourist* t)
