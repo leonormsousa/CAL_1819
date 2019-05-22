@@ -1,4 +1,5 @@
 #include "Company.h"
+#include <iterator>
 
 Company::Company(vector<Tourist> t, vector<Bus> b)
 {
@@ -202,4 +203,39 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
             resp=resps[i];
     }
     return resp;
+}
+
+vector<vector<Tourist*> > Company::TouristGroups(unsigned int tolerance){
+    vector<Tourist> tous=tourists;
+    vector<vector <PoI*> > routes;
+    vector<vector<Tourist*> > touristGroups;
+	auto it = tous.begin();
+    while (it!=tous.end())//; it++)
+    {
+        unsigned int tol=tolerance;
+        vector<PoI*> auxp;
+        vector<Tourist*> auxt;
+        auxt.push_back(&(*find(tourists.begin(), tourists.end(), *it)));
+		auxp = it->getPoIs();
+		auto itt = it;
+		while(itt != tous.end())
+		{
+            vector<PoI*> difference;
+            set_difference(itt->getPoIs().begin(), itt->getPoIs().end(), it->getPoIs().begin(), it->getPoIs().end(), inserter(difference, difference.begin()));
+			if (difference.size() <= tolerance)
+			{
+				tolerance -= difference.size();
+				auxt.push_back(&(*find(tourists.begin(), tourists.end(), *itt)));
+				auxp.insert(auxp.end(), difference.begin(), difference.end());
+				itt++;
+				tous.erase(itt-1);
+				continue;
+			}
+			itt++;
+		}
+		routes.push_back(auxp);
+		touristGroups.push_back(auxt);
+		it++;
+    }
+	return touristGroups;
 }

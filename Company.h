@@ -23,4 +23,5 @@ public:
 	void dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& v, vector<vector<PoI*> > &res);
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
+    vector<vector<Tourist*> > TouristGroups(unsigned int tolerance);
 };
