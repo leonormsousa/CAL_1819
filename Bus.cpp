@@ -24,7 +24,5 @@ void Bus::removeTourist(Tourist * t)
 
 bool Bus::operator==(Bus b)
 {
-    if (id == b.getId())
-        return true;
-    return false;
+    return (id == b.getId());
 }

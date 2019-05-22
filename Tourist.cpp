@@ -31,7 +31,5 @@ vector<PoI*> Tourist::getPoIs(){
 }
 
 bool Tourist::operator==(Tourist t){
-    if (id == t.getId())
-        return true;
-    return false;
+    return id == t.getId();
 }
