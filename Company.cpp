@@ -297,3 +297,7 @@ PoI* Company::findPoI(int id)
 	vector<PoI>::iterator it = find(pois.begin(), pois.end(), poi);
     return &(*it);
 }
+
+Vertex<PoI*>* Company::findVertex(int id){
+	return (map.findVertex(findPoI(id)));
+}

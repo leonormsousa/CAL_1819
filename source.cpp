@@ -131,8 +131,11 @@ void features(Company &p)
 				cin.ignore(100000, '\n');
 			getline(cin, id1);
 			cout << endl;
+
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
-			Edge<PoI*> edge= Edge<PoI*>(p.findPoI(stoi(id)), p.findPoI(stoi(id1)), distance);
+			double f=0;
+
+			Edge<PoI*> edge= Edge<PoI*>(p.findVertex(stoi(id)), p.findVertex(stoi(id1)), distance,f);
 			p.addUnavailableRoad(edge);
             break;
         }
@@ -149,7 +152,8 @@ void features(Company &p)
 			getline(cin, id1);
 			cout << endl;
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
-			Edge<PoI*> edge= Edge<PoI*>(p.findPoI(stoi(id)), p.findPoI(stoi(id1)), distance);
+			double f=0;
+			Edge<PoI*> edge= Edge<PoI*>(p.findVertex(stoi(id)), p.findVertex(stoi(id1)), distance,f);
 			p.removeUnavailableRoad(edge);
             break;
         }

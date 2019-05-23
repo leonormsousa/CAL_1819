@@ -32,4 +32,5 @@ public:
     vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);
     void createGroupsBasedOnBuses(unsigned int tolerance);
     PoI* findPoI(int id);
+    Vertex<PoI*>* findVertex(int id);
 };

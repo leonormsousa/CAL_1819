@@ -93,7 +93,10 @@ public:
 	friend class Graph<T>;
 	friend class Vertex<T>;
 	double getWeight() const;
+	bool operator==(Edge<T> edge);
 	Vertex<T>* getDest();
+	Vertex<T>* getOrig();
+
 };
 
 template <class T>
@@ -108,6 +111,17 @@ Vertex<T>* Edge<T>::getDest(){
 	return dest;
 }
 
+template <class T>
+Vertex<T>* Edge<T>::getOrig(){
+	return orig;
+}
+
+template <class T>
+bool Edge<T>::operator==(Edge<T> edge){
+	return(orig==edge.getOrig() && dest==edge.getDest());
+}
+
+
 
 /* ================================================================================================
  * Class Graph
@@ -116,8 +130,8 @@ Vertex<T>* Edge<T>::getDest(){
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;
-	Vertex<T>* findVertex(const T &inf) const;
 public:
+	Vertex<T>* findVertex(const T &inf) const;
 	vector<Vertex<T> *> getVertexSet() const;
 	double getEdgeWeight(const T &sourc, const T &dest);
 	Vertex<T> *addVertex(const T &in);
