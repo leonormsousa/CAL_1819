@@ -22,14 +22,13 @@ void features(Company &p)
 		cout << "7 - Assinalar uma rua como estando em obras " << endl;
 		cout << "8 - Assinalar as obras de uma determinada rua como terminadas  " << endl;
 		cout << "9 - Calculo do caminho mais curto/rentavel sem grupos " << endl;
-		cout << "10 - Calculo do caminho mais curto/rentavel com grupos sem limite " << endl;
-		cout << "11 - Calculo do caminho mais curto/rentavel com grupos limitados " << endl;
+		cout << "10 - Calculo do caminho mais curto/rentavel com grupos limitados " << endl;
 
 		cout << "0 - Exit" << endl << endl;
 		cout << "Opcao? ";
 		cin >> option;
 		option = toupper(option);
-		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) ))
+		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10)))
 		{
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -98,10 +97,10 @@ void features(Company &p)
 			getline(cin, poiID);            
             cout << endl;
             cout<<"Aqui"<< endl;
-            vector<Tourist>::iterator it=find(p.getTourists().begin(), p.getTourists().end(), Tourist(stoi(id), ""));
+            vector<Tourist>::iterator it=find(p.getTourists()->begin(), p.getTourists()->end(), Tourist(stoi(id), ""));
             cout<<"Aqui"<< endl;
-
-            if(it!=p.getTourists().end()){
+            cout << "pointer to tourist: " << &(*it) << endl;
+            if(it!=p.getTourists()->end()){
             	it->addPoI(p.findPoI(stoi(poiID)));
             	cout << "Ponto de interesse adicionado ao turista " << it->getName() <<endl;
             	cout << it->getPoIs()[0]->getX()<<endl;
@@ -123,7 +122,7 @@ void features(Company &p)
 			getline(cin, poiID);            
             cout << endl;
             PoI poi = PoI(stoi(poiID),0,0);
-            vector<Tourist>::iterator it = find(p.getTourists().begin(), p.getTourists().begin(), Tourist(stoi(id), ""));
+            vector<Tourist>::iterator it = find((*p.getTourists()).begin(), (*p.getTourists()).end(), Tourist(stoi(id), ""));
            	vector<PoI>::iterator it2 = find(p.getPois().begin(), p.getPois().end(), poi);
             it->removePoI( &(*it2));
             break;
@@ -144,9 +143,20 @@ void features(Company &p)
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
 			double f=0;
 
-			Edge<PoI*> edge= Edge<PoI*>(p.findVertex(stoi(id)), p.findVertex(stoi(id1)), distance,f);
+			Vertex<PoI*>* p1 = p.findVertex(stoi(id));
+			if(p1==nullptr){
+				cout << "Vertice de origem nao encontrado. " << endl;
+				break;
+			}
+			Vertex<PoI*>* p2 = p.findVertex(stoi(id1));
+			if(p2==nullptr){
+				cout << "Vertice de destino nao encontrado" << endl;
+				break;
+			}
+
+			Edge<PoI*> edge= Edge<PoI*>(p1, p2 , distance,f);
+			cout << edge.getWeight() << endl;
 			p.addUnavailableRoad(edge);
-			cout << p.getUnavailableRoads()[0].getWeight()<<endl;
             break;
         }
         case 8:{
@@ -168,18 +178,33 @@ void features(Company &p)
             break;
         }
         case 9: {
+        	vector<PoI*> points;
+        	for (size_t i=0; i<p.getTourists()->size(); i++)
+        		points.insert(points.end(), (*p.getTourists())[i].getPoIs().begin(), (*p.getTourists())[i].getPoIs().end());
+        	sort(points.begin(), points.end());
+        	points.erase( unique(points.begin(), points.end()), points.end());
+        	auto it=find(points.begin(), points.end(), p.getinitialPoint());
+        	if (it!= points.end())
+        		points.erase(it);
+        	points.insert(points.begin(), p.getinitialPoint());
+        	points.insert(points.end(), p.getinitialPoint());
+        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
+			for (size_t j=0; j<routes.size(); j++)
+				cout << routes[j]->getId() << " -> ";
             break;
         }
         case 10:{
+        	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(5);
+        	for (size_t i=0; i<routes.size(); i++)
+			{
+				for (size_t j=0; j<routes[i].size(); j++)
+					cout << routes[i][j]->getId() << " -> ";
+				cout << endl;
+			}
             break;
         }
-        case 11: {
-            break;
-        }
-		
 		case 0:{
 			return;
-			break;
 		}
 
 		}

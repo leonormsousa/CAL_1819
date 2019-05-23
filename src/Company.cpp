@@ -27,6 +27,7 @@ void Company::removeBus(int id)
 void Company::addTourist(int id, string name)
 {
     tourists.push_back(Tourist(id, name));
+    cout << &tourists[0] << endl;
 }
     
 bool Company::removeTourist(int id)
@@ -38,6 +39,10 @@ bool Company::removeTourist(int id)
     	return true;
     }
     return false;
+}
+
+PoI* Company::getinitialPoint(){
+	return initialPoint;
 }
 
 int Company::findPoIindex(int id)
@@ -54,8 +59,8 @@ vector<PoI> Company::getPois(){
     return pois;
 }
 
-vector<Tourist> Company::getTourists(){
-    return tourists;
+vector<Tourist>* Company::getTourists(){
+    return &tourists;
 }
 
 
@@ -86,6 +91,8 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
         PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
+        if(i==0)
+        	initialPoint = &vertex;
         map.addVertex(&vertex);
     }
 
@@ -255,15 +262,15 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
 	return touristGroups;
 }
 
-void Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
+vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
     vector<vector<Tourist*> > touristGroups, oldTouristGroups;
-    vector<vector <PoI*> > routess, oldRoutes;
+    vector<vector <PoI*> > oldRoutes, routes;
     oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes);
     do
     {
         initialTolerance--;
-        touristGroups=createTouristGroups(initialTolerance, routess);
-        if (routess.size()>buses.size())
+        touristGroups=createTouristGroups(initialTolerance, routes);
+        if (routes.size()>buses.size())
             break;
         if (touristGroups.size()>busesCapacity)
             break;   
@@ -271,18 +278,25 @@ void Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
     do
     {
         initialTolerance++;
-        touristGroups=createTouristGroups(initialTolerance, routess);
-        if (routess.size()>buses.size())
+        touristGroups=createTouristGroups(initialTolerance, routes);
+        if (routes.size()>buses.size())
             break;
         if (touristGroups.size()>busesCapacity)
             break;   
     }while (touristGroups.size()<oldTouristGroups.size());
     routes=oldRoutes;
     tourist_groups=oldTouristGroups;
+
     for (size_t i=0; i<routes.size(); i++)
     {
+    	auto it=find(routes[i].begin(), routes[i].end(),initialPoint);
+		if (it!= routes[i].end())
+			routes[i].erase(it);
+		routes[i].insert(routes[i].begin(), initialPoint);
+		routes[i].insert(routes[i].end(), initialPoint);
         routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
     }
+    return routes;
 }
 
 bool Company::addUnavailableRoad(Edge<PoI*> edge){
@@ -307,9 +321,21 @@ PoI* Company::findPoI(int id)
 {
 	PoI poi = PoI(id, 0, 0);
 	vector<PoI>::iterator it = find(pois.begin(), pois.end(), poi);
+	if(it==pois.end())
+		return nullptr;
+	cout << "p1 was found in findPoI" << endl;
     return &(*it);
 }
 
 Vertex<PoI*>* Company::findVertex(int id){
-	return (map.findVertex(findPoI(id)));
+	PoI* p1 = findPoI(id);
+	if(p1==nullptr)
+	{
+		cout << "didnt find poi" << endl;
+		return nullptr;
+
+	}
+	cout << "p1 was found" << endl;
+
+	return (map.findVertex(p1));
 }

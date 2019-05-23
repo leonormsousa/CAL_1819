@@ -5,13 +5,13 @@
 class Company{
 private:
     Graph<PoI*> map;
+    PoI* initialPoint;
     vector<Bus> buses;
     vector<Tourist> tourists;
     vector<PoI> pois;
     vector<Edge<PoI*>> unavailableRoads;
-    vector <vector <PoI*> > routes;
     vector <vector <Tourist *> > tourist_groups;
-    int busesCapacity;
+    unsigned int busesCapacity;
 public:
 	Company(vector<Tourist> t = {}, vector<Bus> b = {}, int capacity = 20);
     vector<PoI> getPois();
@@ -19,7 +19,8 @@ public:
     void removeBus(int id);
     void addTourist(int id, string nome);
     bool removeTourist(int id);
-    vector<Tourist> getTourists();
+    PoI* getinitialPoint();
+    vector<Tourist>* getTourists();
     bool addUnavailableRoad(Edge<PoI*>);
     bool removeUnavailableRoad(Edge<PoI*>);
     void initializeGraph(string edgeFile, string vertexFile, string tagFile);
@@ -30,7 +31,7 @@ public:
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
     vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);
-    void createGroupsBasedOnBuses(unsigned int tolerance);
+    vector<vector <PoI*> > createGroupsBasedOnBuses(unsigned int tolerance);
     PoI* findPoI(int id);
     Vertex<PoI*>* findVertex(int id);
     vector<Edge<PoI*>> getUnavailableRoads();
