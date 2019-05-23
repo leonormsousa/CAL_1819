@@ -13,11 +13,11 @@ private:
     vector <vector <Tourist *> > tourist_groups;
     unsigned int busesCapacity;
 public:
-	Company(vector<Tourist> t = {}, vector<Bus> b = {}, int capacity = 20);
+	Company(vector<Tourist> t = {}, vector<Bus> b = {}, unsigned int capacity = 20);
     vector<PoI> getPois();
     void addBus(int id);
     void removeBus(int id);
-    void addTourist(int id, string nome);
+    bool addTourist(int id, string nome);
     bool removeTourist(int id);
     PoI* getinitialPoint();
     vector<Tourist>* getTourists();

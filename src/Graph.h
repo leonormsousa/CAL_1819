@@ -239,12 +239,22 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 */
 template<class T>
 Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
+	cout << "ola6  " << vertexSet.size() << endl;
+	cout << "ola6  " << vertexSet[0]->getInfo()->getId() << endl;
+
 	for (auto v : vertexSet) {
+		cout <<"ola6 dentro for" << endl;
 		v->dist = INF;
 		v->path = nullptr;
 	}
-	auto s = findVertex(origin);
-	s->dist = 0;
+	cout<<"ola6" <<endl;
+	Vertex<T>* s = findVertex(origin);
+	cout<<"ola6" << endl;
+	if(s!=nullptr)
+		s->dist = 0;
+	else
+		cout << "s is null"<<endl;
+	cout << "ola6" << endl;
 	return s;
 }
 
@@ -269,10 +279,17 @@ bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 */
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
+	cout<< "ola5" << endl;
 	auto s = initSingleSource(origin);
+	cout<< "ola5" << endl;
+
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
+	cout<< "ola5" << endl;
+
 	while (!q.empty()) {
+		cout<< "ola5" << endl;
+
 		auto v = q.extractMin();
 		for (auto e : v->outgoing) {
 			auto oldDist = e->dest->dist;

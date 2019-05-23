@@ -59,7 +59,10 @@ void features(Company &p)
 			cout << "Introduza o id do turista: ";
 			cin >> id;
 			cout << endl;
-			p.addTourist(stoi(id), nome);
+			if(p.addTourist(stoi(id), nome))
+				cout << "O turista " << nome << " foi adicionado." << endl;
+			else
+				cout << "O turista com o id " << id << " jï¿½ existe." << endl;
 			break;
 		}
 		case 3: {
@@ -86,7 +89,7 @@ void features(Company &p)
 		}
         case 5: {
             string id, poiID;
-            cout << "ID do turista ao qual adicionar o ponto de interesse:";
+            cout << "ID do turista ao qual adicionar o ponto de interesse: ";
             if (cin.peek() != EOF)
 				cin.ignore(100000, '\n');
 			getline(cin, id);            
@@ -96,17 +99,21 @@ void features(Company &p)
 //				cin.ignore(100000, '\n');
 			getline(cin, poiID);            
             cout << endl;
-            cout<<"Aqui"<< endl;
             vector<Tourist>::iterator it=find(p.getTourists()->begin(), p.getTourists()->end(), Tourist(stoi(id), ""));
-            cout<<"Aqui"<< endl;
-            cout << "pointer to tourist: " << &(*it) << endl;
             if(it!=p.getTourists()->end()){
-            	it->addPoI(p.findPoI(stoi(poiID)));
-            	cout << "Ponto de interesse adicionado ao turista " << it->getName() <<endl;
-            	cout << it->getPoIs()[0]->getX()<<endl;
+            	PoI* poi;
+            	poi = p.findPoI(stoi(poiID));
+            	if(poi != NULL){
+					if(it->addPoI(poi))
+						cout << "Ponto de interesse " << poiID << " adicionado ao turista " << it->getName() <<endl;
+					else
+						cout << "Ponto de interesse " << poiID << " jï¿½ foi previamente adicionado ao turista " << it->getName() <<endl;
+            	}
+            	else
+            		cout << "Ponto de interesse " << poiID << " nao existe." << endl;
             }
             else
-            	cout<< "O id indicado não corresponde a nenhum turista"<<endl;
+            	cout<< "O id " << id << " nao corresponde a nenhum turista"<<endl;
             break;
         }
         case 6:{
@@ -117,14 +124,20 @@ void features(Company &p)
 			getline(cin, id);            
             cout << endl;
             cout << "ID do ponto de interesse a remover: ";
-            if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
-			getline(cin, poiID);            
+           // if (cin.peek() != EOF)
+				//cin.ignore(100000, '\n');
+			getline(cin, poiID);
             cout << endl;
             PoI poi = PoI(stoi(poiID),0,0);
-            vector<Tourist>::iterator it = find((*p.getTourists()).begin(), (*p.getTourists()).end(), Tourist(stoi(id), ""));
-           	vector<PoI>::iterator it2 = find(p.getPois().begin(), p.getPois().end(), poi);
-            it->removePoI( &(*it2));
+            vector<Tourist>::iterator it = find(p.getTourists()->begin(), p.getTourists()->begin(), Tourist(stoi(id), ""));
+           	if(it!=p.getTourists()->end()){
+				if(it->removePoI(p.findPoI(stoi(poiID))))
+					cout << "Ponto de interesse removido do turista " << it->getName() <<endl;
+				else
+					cout << "O turista nao tem nenhum POI com o ID " << stoi(poiID) <<endl;
+			}
+			else
+				cout<< "O id indicado nao corresponde a nenhum turista"<<endl;
             break;
         }
         case 7: {
@@ -179,19 +192,29 @@ void features(Company &p)
         }
         case 9: {
         	vector<PoI*> points;
-        	for (size_t i=0; i<p.getTourists()->size(); i++)
-        		points.insert(points.end(), (*p.getTourists())[i].getPoIs().begin(), (*p.getTourists())[i].getPoIs().end());
+        	for (size_t i=0; i<(p.getTourists())->size(); i++)
+        		points.insert(points.begin(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
+
         	sort(points.begin(), points.end());
+
         	points.erase( unique(points.begin(), points.end()), points.end());
+
         	auto it=find(points.begin(), points.end(), p.getinitialPoint());
         	if (it!= points.end())
         		points.erase(it);
+
         	points.insert(points.begin(), p.getinitialPoint());
+        	cout << p.getinitialPoint()->getId()<< endl;
         	points.insert(points.end(), p.getinitialPoint());
+        	cout << "ola" << endl;
+
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
+        	cout << "ola" << endl;
 			for (size_t j=0; j<routes.size(); j++)
 				cout << routes[j]->getId() << " -> ";
-            break;
+        	cout << "ola" << endl;
+
+			break;
         }
         case 10:{
         	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(5);
@@ -325,8 +348,6 @@ int main()
 	string vertexFile= "T03/" + city + "/T03_Nodes_X_Y_" + city + ".txt";
 	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
-	cout << endl << edgeFile << endl << endl;
-
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
 	/*for(size_t i=0; i<p.getPois().size();i++)
@@ -344,7 +365,6 @@ int main()
 	*/
 	//gv->rearrange();
 	//sleep(5);
-	//gv->closeWindow();
 
 	features(p);
 
@@ -353,6 +373,6 @@ int main()
 	cout << "Joao Praca" << endl <<  "Leonor M. Sousa" << endl << "Silvia Rocha" << endl <<
 			"Informatics and Computing Engineering Students in the Faculty of Engineering of the University of Porto"<< endl << endl;
 
-		
+	//gv->closeWindow();
 	return 0;
 }

@@ -1,7 +1,7 @@
 #include "Company.h"
 #include <iterator>
 
-Company::Company(vector<Tourist> t, vector<Bus> b, int capacity)
+Company::Company(vector<Tourist> t, vector<Bus> b, unsigned int capacity)
 {
 	tourists = t;
 	buses = b;
@@ -24,10 +24,18 @@ void Company::removeBus(int id)
     buses.erase(it);
 }
 
-void Company::addTourist(int id, string name)
+bool Company::addTourist(int id, string name)
 {
-    tourists.push_back(Tourist(id, name));
-    cout << &tourists[0] << endl;
+	Tourist t(id, name);
+
+	auto it = find(tourists.begin(), tourists.end(), t);
+	if(it == tourists.end())
+	{
+		tourists.push_back(t);
+		cout << "tourist " << &tourists[0] << endl;
+		return true;
+	}
+	return false;
 }
     
 bool Company::removeTourist(int id)
@@ -92,7 +100,11 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
         PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
         if(i==0)
-        	initialPoint = &vertex;
+        {
+        	PoI* poi;
+        	*poi = PoI(stoi(id), stod(src), stod(dest));
+        	initialPoint=poi;
+        }
         map.addVertex(&vertex);
     }
 
@@ -145,7 +157,10 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
+	cout << "ola4" << endl;
+
     map.dijkstraShortestPath(point1);
+cout << "ola4" << endl;
     return map.getPath(point1, point2);
 }
 
@@ -155,14 +170,24 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     vector<PoI*> resp;
     if (points.size()<=2)
         return points;
+	cout << "ola3" << endl;
+
     for (size_t i=0; i<points.size()-1; i++)
+    {
+    	cout << "ola3  " << i << "  "  << points[i]->getId() << endl;
         auxVector.push_back(calculateRouteBetweenTwoPoints(points[i], points[i+1]));
+        cout <<"ola3  " <<  i << endl;
+    }
+	cout << "ola3" << endl;
+
     resp=auxVector[0];
     for (size_t i=0; i<auxVector.size(); i++)
     {
         auxVector[i].erase(auxVector[i].begin());
         resp.insert(resp.end(), auxVector[i].begin(), auxVector[i].end());
     }
+	cout << "ola3" << endl;
+
     return resp;
 }
 
@@ -208,24 +233,39 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     vector<PoI*> auxp=points;
     if (points.size()<=2)
         return points;
+
     PoI* point1= points[0];
     PoI* point2 = points[points.size()-1];
+	cout << "ola2" << endl;
+	cout<< points.size() << endl;
+    auxp.erase((points.begin()+points.size()-1));
     auxp.erase(points.begin());
-    auxp.erase(points.begin()+points.size()-1);
+
     vector<PoI*> aux;
+	cout << "ola2" << endl;
+
     dfs(0, points.size()-2, -1, aux, points, vectorAux);
+	cout << "ola2" << endl;
+
     for (size_t i=0; i<vectorAux.size(); i++)
     {
         vectorAux[i].insert(vectorAux[i].begin(), point1);
         vectorAux[i].insert(vectorAux[i].end(), point2);
+    	cout <<"ola2  " <<  i << endl;
         resps.push_back(calculateRouteWithOrderedPoints(vectorAux[i]));
+    	cout <<"ola2  " <<  i << endl;
+
     }
     resp=resps[0];
+	cout << "ola2" << endl;
+
     for (size_t i=0; i<resps.size(); i++)
     {
         if (getWeight(resps[i])<getWeight(resp))
             resp=resps[i];
     }
+	cout << "ola2" << endl;
+
     return resp;
 }
 
@@ -238,12 +278,12 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
         vector<PoI*> auxp;
         vector<Tourist*> auxt;
         auxt.push_back(&(*find(tourists.begin(), tourists.end(), *it)));
-		auxp = it->getPoIs();
+		auxp = *(it->getPoIs());
 		auto itt = it;
 		while(itt != tous.end())
 		{
             vector<PoI*> difference;
-            set_difference(itt->getPoIs().begin(), itt->getPoIs().end(), it->getPoIs().begin(), it->getPoIs().end(), inserter(difference, difference.begin()));
+            set_difference((*(itt->getPoIs())).begin(), (*(itt->getPoIs())).end(), (*(it->getPoIs())).begin(),(*(it->getPoIs())).end(), inserter(difference, difference.begin()));
 			if (difference.size() <= tolerance)
 			{
 				tolerance -= difference.size();
@@ -320,10 +360,10 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 PoI* Company::findPoI(int id)
 {
 	PoI poi = PoI(id, 0, 0);
+	cout << "findpoi1" << endl;
 	vector<PoI>::iterator it = find(pois.begin(), pois.end(), poi);
-	if(it==pois.end())
-		return nullptr;
-	cout << "p1 was found in findPoI" << endl;
+	if(it == pois.end())
+		return NULL;
     return &(*it);
 }
 
