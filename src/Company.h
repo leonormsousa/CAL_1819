@@ -15,8 +15,8 @@ private:
 public:
 	Company(vector<Tourist> t = {}, vector<Bus> b = {}, int capacity = 20);
     vector<PoI> getPois();
-    void addBus(int id);
-    void removeBus(int id);
+    bool addBus(int id);
+    bool removeBus(int id);
     bool addTourist(int id, string nome);
     bool removeTourist(int id);
     vector<Tourist>* getTourists();
