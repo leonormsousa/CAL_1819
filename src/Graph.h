@@ -60,10 +60,9 @@ Edge<T> *Vertex<T>::addEdge(Vertex<T> *dest, double c, double f) {
 
 template <class T>
 void Vertex<T>::removeEdge(Vertex<T> *dest){
-	Edge<T>* edge;
 	for (auto it=dest->incoming.begin(); it!=dest->incoming.end(); it++)
 	{
-		if (it->orig == this)
+		if ((*it)->orig == this)
 		{
 			dest->incoming.erase(it);
 			break;
@@ -71,7 +70,7 @@ void Vertex<T>::removeEdge(Vertex<T> *dest){
 	}
 	for (auto it=outgoing.begin(); it!=outgoing.end(); it++)
 	{
-		if (it->dest == dest)
+		if ((*it)->dest == dest)
 		{
 			outgoing.erase(it);
 			return;
@@ -206,16 +205,17 @@ Edge<T> * Graph<T>::addEdge(const T &sourc, const T &dest, double c, double f) {
 
 template<class T>
 void Graph<T>::addEdge(Edge<T> edge){
-	addEdge(edge.orig, edge.dest, edge.c, edge.f);
+	double f=0;
+	addEdge(edge.orig->getInfo(), edge.dest->getInfo(), edge.weight, f);
 }
 
 template<class T>
 void Graph<T>::removeEdge(Edge<T> edge){
-	auto s = findVertex(edge.orig);
-	auto d = findVertex(edge.dest);
+	auto s = findVertex(edge.orig->getInfo());
+	auto d = findVertex(edge.dest->getInfo());
 	if (s == nullptr || d == nullptr)
-		return nullptr;
-	s.removeEdge(edge.dest);
+		return;
+	s->removeEdge(edge.dest);
 }
 
 template <class T>
