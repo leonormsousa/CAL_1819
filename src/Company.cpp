@@ -8,6 +8,11 @@ Company::Company(vector<Tourist> t, vector<Bus> b, int capacity)
 	busesCapacity = capacity;
 }
     
+vector<Edge<PoI*>> Company::getUnavailableRoads(){
+	return unavailableRoads;
+}
+
+
 void Company::addBus(int id)
 {
     buses.push_back(Bus(id));

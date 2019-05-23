@@ -29,7 +29,7 @@ void features(Company &p)
 		cout << "Opcao? ";
 		cin >> option;
 		option = toupper(option);
-		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) && (option != 12) && (option != 13) && (option != 14) && (option != 15) && (option != 16) && (option != 17) && (option != 18) && (option != 19) && (option != 20)))
+		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) ))
 		{
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -97,7 +97,9 @@ void features(Company &p)
 //				cin.ignore(100000, '\n');
 			getline(cin, poiID);            
             cout << endl;
+            cout<<"Aqui"<< endl;
             vector<Tourist>::iterator it=find(p.getTourists().begin(), p.getTourists().end(), Tourist(stoi(id), ""));
+            cout<<"Aqui"<< endl;
 
             if(it!=p.getTourists().end()){
             	it->addPoI(p.findPoI(stoi(poiID)));
@@ -134,8 +136,8 @@ void features(Company &p)
 			getline(cin, id);
 			cout << endl;
 			cout << "ID do ponto de interesse de origem da estrada: ";
-			if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
+//			if (cin.peek() != EOF)
+//				cin.ignore(100000, '\n');
 			getline(cin, id1);
 			cout << endl;
 
@@ -144,6 +146,7 @@ void features(Company &p)
 
 			Edge<PoI*> edge= Edge<PoI*>(p.findVertex(stoi(id)), p.findVertex(stoi(id1)), distance,f);
 			p.addUnavailableRoad(edge);
+			cout << p.getUnavailableRoads()[0].getWeight()<<endl;
             break;
         }
         case 8:{
@@ -154,8 +157,8 @@ void features(Company &p)
 			getline(cin, id);
 			cout << endl;
 			cout << "ID do ponto de interesse de origem da estrada: ";
-			if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
+//			if (cin.peek() != EOF)
+//				cin.ignore(100000, '\n');
 			getline(cin, id1);
 			cout << endl;
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
