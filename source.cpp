@@ -120,9 +120,37 @@ void features(Company &p)
             break;
         }
         case 7: {
+        	string id, id1;
+        	cout << "ID do ponto de interesse de origem da estrada: ";
+        	if (cin.peek() != EOF)
+				cin.ignore(100000, '\n');
+			getline(cin, id);
+			cout << endl;
+			cout << "ID do ponto de interesse de origem da estrada: ";
+			if (cin.peek() != EOF)
+				cin.ignore(100000, '\n');
+			getline(cin, id1);
+			cout << endl;
+			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
+			Edge<PoI*> edge= Edge<PoI*>(p.findPoI(stoi(id)), p.findPoI(stoi(id1)), distance);
+			p.addUnavailableRoad(edge);
             break;
         }
         case 8:{
+        	string id, id1;
+			cout << "ID do ponto de interesse de origem da estrada: ";
+			if (cin.peek() != EOF)
+				cin.ignore(100000, '\n');
+			getline(cin, id);
+			cout << endl;
+			cout << "ID do ponto de interesse de origem da estrada: ";
+			if (cin.peek() != EOF)
+				cin.ignore(100000, '\n');
+			getline(cin, id1);
+			cout << endl;
+			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
+			Edge<PoI*> edge= Edge<PoI*>(p.findPoI(stoi(id)), p.findPoI(stoi(id1)), distance);
+			p.removeUnavailableRoad(edge);
             break;
         }
         case 9: {
@@ -242,15 +270,6 @@ string getMapName()
 
 int main()
 {
-    /*
-    Company p = Company();
-    string edgeFile= "T03/Aveiro/T03_Edges_Aveiro.txt";
-    string vertexFile= "T03/Aveiro/T03_Nodes_X_Y_Aveiro.txt";
-    string tagsFile= "T03/Aveiro/T03_tags_Aveiro.txt";
-
-    p.initializeGraph(edgeFile, vertexFile, tagsFile);
-    */
-
 	cout << "==========================" << endl;
 	cout << "===  CITY SIGHTSEEING  ===" << endl;
 	cout << "==========================" << endl;
