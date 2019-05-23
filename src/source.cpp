@@ -79,8 +79,10 @@ void features(Company &p)
 				cin.ignore(100000, '\n');
 			getline(cin, id);
 			cout << endl;
-			p.removeTourist(stoi(id));
-			cout << "Turista " << id << " removido com sucesso." << endl;
+			if(p.removeTourist(stoi(id)))
+				cout << "Turista " << id << " removido com sucesso." << endl;
+			else
+				cout << "Turista " << id << " nao encontrado." << endl;
 			break;
 		}
         case 5: {
@@ -91,14 +93,19 @@ void features(Company &p)
 			getline(cin, id);            
             cout << endl;
             cout << "ID do ponto de interesse a adicionar: ";
-            if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
+//            if (cin.peek() != EOF)
+//				cin.ignore(100000, '\n');
 			getline(cin, poiID);            
             cout << endl;
-            PoI poi = PoI(stoi(poiID),0,0);
-            vector<Tourist>::iterator it = find(p.getTourists().begin(), p.getTourists().begin(), Tourist(stoi(id), ""));
-           	vector<PoI>::iterator it2 = find(p.getPois().begin(), p.getPois().end(), poi);
-            it->addPoI( &(*it2));
+            vector<Tourist>::iterator it=find(p.getTourists().begin(), p.getTourists().end(), Tourist(stoi(id), ""));
+
+            if(it!=p.getTourists().end()){
+            	it->addPoI(p.findPoI(stoi(poiID)));
+            	cout << "Ponto de interesse adicionado ao turista " << it->getName() <<endl;
+            	cout << it->getPoIs()[0]->getX()<<endl;
+            }
+            else
+            	cout<< "O id indicado não corresponde a nenhum turista"<<endl;
             break;
         }
         case 6:{

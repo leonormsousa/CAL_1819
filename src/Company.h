@@ -18,7 +18,7 @@ public:
     void addBus(int id);
     void removeBus(int id);
     void addTourist(int id, string nome);
-    void removeTourist(int id);
+    bool removeTourist(int id);
     vector<Tourist> getTourists();
     bool addUnavailableRoad(Edge<PoI*>);
     bool removeUnavailableRoad(Edge<PoI*>);

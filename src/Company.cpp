@@ -24,10 +24,15 @@ void Company::addTourist(int id, string name)
     tourists.push_back(Tourist(id, name));
 }
     
-void Company::removeTourist(int id)
+bool Company::removeTourist(int id)
 {
     auto it=find(tourists.begin(), tourists.end(), Tourist(id, ""));
-    tourists.erase(it);
+    if(it!=tourists.end())
+    {
+    	tourists.erase(it);
+    	return true;
+    }
+    return false;
 }
 
 int Company::findPoIindex(int id)
