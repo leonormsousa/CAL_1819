@@ -8,14 +8,31 @@ Tourist::Tourist(int id, string name, vector<PoI*> pois){
     poIs=pois;
 }
 
-void Tourist::addPoI(PoI* n){
-    poIs.push_back(n);
+bool Tourist::addPoI(PoI* n){
+	cout << "addpoi1" << endl;
+	cout << "vsize " << poIs.size() << endl;
+	vector<PoI*>::iterator it=find(poIs.begin(),poIs.end(),n);
+	cout << "addpoi2" << endl;
+	if(it == poIs.end())
+	{
+		cout << "addpoi3" << endl;
+		poIs.push_back(n);
+		return true;
+	}
+	cout << "id: " << (*it)->getId() << endl;
+	return false;
 }
 
-void Tourist::removePoI(PoI* n){
+bool Tourist::removePoI(PoI* n){
     vector<PoI*>::iterator it;
     it=find(poIs.begin(),poIs.end(),n);
-    poIs.erase(it);
+    if(it != poIs.end())
+    {
+    	poIs.erase(it);
+    	return true;
+    }
+    else
+    	return false;
 }
 
  int Tourist::getId(){

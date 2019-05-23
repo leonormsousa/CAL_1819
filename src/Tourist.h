@@ -9,8 +9,8 @@ class Tourist{
     vector<PoI*> poIs;
 public:
 	Tourist(int id, string name, vector<PoI*> poIs = {});
-    void addPoI(PoI* n);
-    void removePoI(PoI* n);
+    bool addPoI(PoI* n);
+    bool removePoI(PoI* n);
     int getId(); 
     string getName();
     vector<PoI*> getPoIs();

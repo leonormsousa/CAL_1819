@@ -17,9 +17,9 @@ public:
     vector<PoI> getPois();
     void addBus(int id);
     void removeBus(int id);
-    void addTourist(int id, string nome);
+    bool addTourist(int id, string nome);
     bool removeTourist(int id);
-    vector<Tourist> getTourists();
+    vector<Tourist>* getTourists();
     bool addUnavailableRoad(Edge<PoI*>);
     bool removeUnavailableRoad(Edge<PoI*>);
     void initializeGraph(string edgeFile, string vertexFile, string tagFile);

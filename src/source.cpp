@@ -60,7 +60,10 @@ void features(Company &p)
 			cout << "Introduza o id do turista: ";
 			cin >> id;
 			cout << endl;
-			p.addTourist(stoi(id), nome);
+			if(p.addTourist(stoi(id), nome))
+				cout << "O turista " << nome << " foi adicionado." << endl;
+			else
+				cout << "O turista com o id " << id << " já existe." << endl;
 			break;
 		}
 		case 3: {
@@ -87,7 +90,7 @@ void features(Company &p)
 		}
         case 5: {
             string id, poiID;
-            cout << "ID do turista ao qual adicionar o ponto de interesse:";
+            cout << "ID do turista ao qual adicionar o ponto de interesse: ";
             if (cin.peek() != EOF)
 				cin.ignore(100000, '\n');
 			getline(cin, id);            
@@ -97,15 +100,32 @@ void features(Company &p)
 //				cin.ignore(100000, '\n');
 			getline(cin, poiID);            
             cout << endl;
-            vector<Tourist>::iterator it=find(p.getTourists().begin(), p.getTourists().end(), Tourist(stoi(id), ""));
-
-            if(it!=p.getTourists().end()){
-            	it->addPoI(p.findPoI(stoi(poiID)));
-            	cout << "Ponto de interesse adicionado ao turista " << it->getName() <<endl;
-            	cout << it->getPoIs()[0]->getX()<<endl;
+            cout << "1" <<endl;
+            vector<Tourist>::iterator it=find(p.getTourists()->begin(), p.getTourists()->end(), Tourist(stoi(id), ""));
+            cout << "aqui: " << it->getPoIs().size() << endl;
+            cout << "2" <<endl;
+            if(it!=p.getTourists()->end()){
+            	cout << "3" <<endl;
+            	cout << stoi(poiID) << endl;
+            	PoI* poi;
+            	poi = p.findPoI(stoi(poiID));
+            	cout << "pointer to tourist: " << &(*it) << endl;
+            	cout << "poi: " << poi->getId() << endl;
+            	if(poi != NULL){
+            		cout << "4" << endl;
+					if(it->addPoI(poi))
+						cout << "Ponto de interesse " << poiID << " adicionado ao turista " << it->getName() <<endl;
+					else
+						cout << "Ponto de interesse " << poiID << " já foi previamente adicionado ao turista " << it->getName() <<endl;
+					cout << "4" <<endl;
+					//cout << it->getPoIs()[0]->getX()<<endl;
+					cout << "size " << it->getPoIs().size() << endl;
+            	}
+            	else
+            		cout << "Ponto de interesse " << poiID << " nao existe." << endl;
             }
             else
-            	cout<< "O id indicado não corresponde a nenhum turista"<<endl;
+            	cout<< "O id " << id << " não corresponde a nenhum turista"<<endl;
             break;
         }
         case 6:{
@@ -116,14 +136,30 @@ void features(Company &p)
 			getline(cin, id);            
             cout << endl;
             cout << "ID do ponto de interesse a remover: ";
-            if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
-			getline(cin, poiID);            
+           // if (cin.peek() != EOF)
+				//cin.ignore(100000, '\n');
+			getline(cin, poiID);
             cout << endl;
+            cout << "1" << endl;
             PoI poi = PoI(stoi(poiID),0,0);
-            vector<Tourist>::iterator it = find(p.getTourists().begin(), p.getTourists().begin(), Tourist(stoi(id), ""));
-           	vector<PoI>::iterator it2 = find(p.getPois().begin(), p.getPois().end(), poi);
-            it->removePoI( &(*it2));
+            cout << "2" <<endl;
+            vector<Tourist>::iterator it = find(p.getTourists()->begin(), p.getTourists()->begin(), Tourist(stoi(id), ""));
+            cout << "3" <<endl;
+           	//vector<PoI>::iterator it2 = find(p.getPois().begin(), p.getPois().end(), poi);
+           	cout << "4" <<endl;
+           	if(it!=p.getTourists()->end()){
+				cout << "3" <<endl;
+				if(it->removePoI(p.findPoI(stoi(poiID))))
+					cout << "Ponto de interesse removido do turista " << it->getName() <<endl;
+				else
+					cout << "O turista nao tem nenhum POI com o ID " << stoi(poiID) <<endl;
+				cout << "4" <<endl;
+				//cout << it->getPoIs()[0]->getX()<<endl;
+				cout << "newsize: " << it->getPoIs().size() << endl;
+			}
+			else
+				cout<< "O id indicado não corresponde a nenhum turista"<<endl;
+           	cout << "5" <<endl;
             break;
         }
         case 7: {
@@ -297,8 +333,6 @@ int main()
 	string vertexFile= "T03/" + city + "/T03_Nodes_X_Y_" + city + ".txt";
 	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
-	cout << endl << edgeFile << endl << endl;
-
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
 	for(size_t i=0; i<p.getPois().size();i++)
@@ -316,7 +350,6 @@ int main()
 	*/
 	gv->rearrange();
 	//sleep(5);
-	//gv->closeWindow();
 
 	features(p);
 
@@ -325,6 +358,6 @@ int main()
 	cout << "Joao Praca" << endl <<  "Leonor M. Sousa" << endl << "Silvia Rocha" << endl <<
 			"Informatics and Computing Engineering Students in the Faculty of Engineering of the University of Porto"<< endl << endl;
 
-		
+	gv->closeWindow();
 	return 0;
 }

@@ -19,9 +19,18 @@ void Company::removeBus(int id)
     buses.erase(it);
 }
 
-void Company::addTourist(int id, string name)
+bool Company::addTourist(int id, string name)
 {
-    tourists.push_back(Tourist(id, name));
+	Tourist t(id, name);
+
+	auto it = find(tourists.begin(), tourists.end(), t);
+	if(it == tourists.end())
+	{
+		tourists.push_back(t);
+		cout << "tourist " << &tourists[0] << endl;
+		return true;
+	}
+	return false;
 }
     
 bool Company::removeTourist(int id)
@@ -49,8 +58,8 @@ vector<PoI> Company::getPois(){
     return pois;
 }
 
-vector<Tourist> Company::getTourists(){
-    return tourists;
+vector<Tourist>* Company::getTourists(){
+    return &tourists;
 }
 
 
@@ -81,8 +90,10 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
         PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
+
         map.addVertex(&vertex);
     }
+    cout <<"apontador na criacao:" <<  &(pois[0]) << endl;
 
 	cout << "Reading edges..." << endl;
     getline(edges, line);
@@ -299,7 +310,11 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 PoI* Company::findPoI(int id)
 {
 	PoI poi = PoI(id, 0, 0);
+	cout << "findpoi1" << endl;
 	vector<PoI>::iterator it = find(pois.begin(), pois.end(), poi);
+	cout << "findpoi2" << endl;
+	if(it == pois.end())
+		return NULL;
     return &(*it);
 }
 
