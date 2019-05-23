@@ -30,6 +30,7 @@ class Vertex {
 	vector<Edge<T> *> incoming;
 	double dist = 0;
 	Edge<T> * addEdge(Vertex<T> *dest, double c, double f);
+	void removeEdge(Vertex<T> *dest);
 	bool visited = false;  // for path finding
 	Vertex<T> *path = nullptr;
 
@@ -55,6 +56,27 @@ Edge<T> *Vertex<T>::addEdge(Vertex<T> *dest, double c, double f) {
 	this->outgoing.push_back(e);
 	dest->incoming.push_back(e);
 	return e;
+}
+
+template <class T>
+void Vertex<T>::removeEdge(Vertex<T> *dest){
+	for (auto it=dest->incoming.begin(); it!=dest->incoming.end(); it++)
+	{
+		if ((*it)->orig == this)
+		{
+			dest->incoming.erase(it);
+			break;
+		}
+	}
+	for (auto it=outgoing.begin(); it!=outgoing.end(); it++)
+	{
+		if ((*it)->dest == dest)
+		{
+			outgoing.erase(it);
+			return;
+		}
+	}
+
 }
 
 template <class T>
@@ -136,6 +158,8 @@ public:
 	double getEdgeWeight(const T &sourc, const T &dest);
 	Vertex<T> *addVertex(const T &in);
 	Edge<T> *addEdge(const T &sourc, const T &dest, double c, double f=0);
+	void addEdge(Edge<T> edge);
+	void removeEdge(Edge<T> edge);
 	void dijkstraShortestPath(const T &origin);
 	void AStarShortestPath(const T &origin);
 	float euclidiandistance(const T &origin, const T &destination);
@@ -177,6 +201,21 @@ Edge<T> * Graph<T>::addEdge(const T &sourc, const T &dest, double c, double f) {
 		return nullptr;
 	else
 		return s->addEdge(d, c, f);
+}
+
+template<class T>
+void Graph<T>::addEdge(Edge<T> edge){
+	double f=0;
+	addEdge(edge.orig->getInfo(), edge.dest->getInfo(), edge.weight, f);
+}
+
+template<class T>
+void Graph<T>::removeEdge(Edge<T> edge){
+	auto s = findVertex(edge.orig->getInfo());
+	auto d = findVertex(edge.dest->getInfo());
+	if (s == nullptr || d == nullptr)
+		return;
+	s->removeEdge(edge.dest);
 }
 
 template <class T>

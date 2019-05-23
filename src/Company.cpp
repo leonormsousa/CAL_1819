@@ -8,6 +8,11 @@ Company::Company(vector<Tourist> t, vector<Bus> b, int capacity)
 	busesCapacity = capacity;
 }
     
+vector<Edge<PoI*>> Company::getUnavailableRoads(){
+	return unavailableRoads;
+}
+
+
 void Company::addBus(int id)
 {
     buses.push_back(Bus(id));
@@ -295,6 +300,7 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 	vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
 	if(it==unavailableRoads.end()){
 		unavailableRoads.push_back(edge);
+		map.removeEdge(edge);
 		return true;
 	}
 	return false;
@@ -302,6 +308,7 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
  bool Company::removeUnavailableRoad(Edge<PoI*> edge){
 	 vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
 	 	if(it!=unavailableRoads.end()){
+	 		map.addEdge(edge);
 	 		unavailableRoads.erase(it);
 	 		return true;
 	 	}

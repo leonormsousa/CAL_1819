@@ -29,7 +29,7 @@ void features(Company &p)
 		cout << "Opcao? ";
 		cin >> option;
 		option = toupper(option);
-		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) && (option != 12) && (option != 13) && (option != 14) && (option != 15) && (option != 16) && (option != 17) && (option != 18) && (option != 19) && (option != 20)))
+		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11) ))
 		{
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -63,7 +63,7 @@ void features(Company &p)
 			if(p.addTourist(stoi(id), nome))
 				cout << "O turista " << nome << " foi adicionado." << endl;
 			else
-				cout << "O turista com o id " << id << " já existe." << endl;
+				cout << "O turista com o id " << id << " jï¿½ existe." << endl;
 			break;
 		}
 		case 3: {
@@ -116,7 +116,7 @@ void features(Company &p)
 					if(it->addPoI(poi))
 						cout << "Ponto de interesse " << poiID << " adicionado ao turista " << it->getName() <<endl;
 					else
-						cout << "Ponto de interesse " << poiID << " já foi previamente adicionado ao turista " << it->getName() <<endl;
+						cout << "Ponto de interesse " << poiID << " jï¿½ foi previamente adicionado ao turista " << it->getName() <<endl;
 					cout << "4" <<endl;
 					//cout << it->getPoIs()[0]->getX()<<endl;
 					cout << "size " << it->getPoIs().size() << endl;
@@ -125,7 +125,7 @@ void features(Company &p)
             		cout << "Ponto de interesse " << poiID << " nao existe." << endl;
             }
             else
-            	cout<< "O id " << id << " não corresponde a nenhum turista"<<endl;
+            	cout<< "O id " << id << " nï¿½o corresponde a nenhum turista"<<endl;
             break;
         }
         case 6:{
@@ -158,7 +158,7 @@ void features(Company &p)
 				cout << "newsize: " << it->getPoIs().size() << endl;
 			}
 			else
-				cout<< "O id indicado não corresponde a nenhum turista"<<endl;
+				cout<< "O id indicado nï¿½o corresponde a nenhum turista"<<endl;
            	cout << "5" <<endl;
             break;
         }
@@ -170,8 +170,8 @@ void features(Company &p)
 			getline(cin, id);
 			cout << endl;
 			cout << "ID do ponto de interesse de origem da estrada: ";
-			if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
+//			if (cin.peek() != EOF)
+//				cin.ignore(100000, '\n');
 			getline(cin, id1);
 			cout << endl;
 
@@ -180,6 +180,7 @@ void features(Company &p)
 
 			Edge<PoI*> edge= Edge<PoI*>(p.findVertex(stoi(id)), p.findVertex(stoi(id1)), distance,f);
 			p.addUnavailableRoad(edge);
+			cout << p.getUnavailableRoads()[0].getWeight()<<endl;
             break;
         }
         case 8:{
@@ -190,8 +191,8 @@ void features(Company &p)
 			getline(cin, id);
 			cout << endl;
 			cout << "ID do ponto de interesse de origem da estrada: ";
-			if (cin.peek() != EOF)
-				cin.ignore(100000, '\n');
+//			if (cin.peek() != EOF)
+//				cin.ignore(100000, '\n');
 			getline(cin, id1);
 			cout << endl;
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
@@ -323,10 +324,10 @@ int main()
 
 	string city = getMapName();
 
-	GraphViewer * gv = new GraphViewer(600, 600, true);
+	/*GraphViewer * gv = new GraphViewer(600, 600, true);
 	gv->createWindow(600, 600);
 	gv->defineVertexColor("blue");
-	gv->defineEdgeColor("black");
+	gv->defineEdgeColor("black");*/
 
 	Company p = Company();
 	string edgeFile= "T03/" + city + "/T03_Edges_" + city + ".txt";
@@ -335,10 +336,10 @@ int main()
 
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
-	for(size_t i=0; i<p.getPois().size();i++)
+	/*for(size_t i=0; i<p.getPois().size();i++)
 	{
 		gv->addNode(p.getPois()[i].getId());
-	}
+	}*/
 	/*
 	gv->addEdge(0, 0, 1, EdgeType::DIRECTED);
 
@@ -348,7 +349,7 @@ int main()
 	gv->setEdgeColor(0, "yellow");
 	gv->setBackground("image.png");
 	*/
-	gv->rearrange();
+	//gv->rearrange();
 	//sleep(5);
 
 	features(p);

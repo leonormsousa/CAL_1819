@@ -33,4 +33,5 @@ public:
     void createGroupsBasedOnBuses(unsigned int tolerance);
     PoI* findPoI(int id);
     Vertex<PoI*>* findVertex(int id);
+    vector<Edge<PoI*>> getUnavailableRoads();
 };
