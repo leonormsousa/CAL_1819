@@ -274,7 +274,6 @@ bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
 	auto s = initSingleSource(origin);
-	//cout<< "id dijkstra: " << origin->getId() << endl;
 
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
@@ -328,8 +327,6 @@ float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
 */
 template<class T>
 vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
-	//cout << "ola7" << endl;
-
 	vector<T> res;
 	auto v = findVertex(dest);
 	if (v == nullptr || v->dist == INF)
