@@ -29,7 +29,7 @@ public:
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     int findPoIindex(int id);
     vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
-	void dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& v, vector<vector<PoI*> > &res);
+	void dfs(const vector<PoI*>& v, vector<vector<PoI*> > &res);
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
     vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);

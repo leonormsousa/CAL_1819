@@ -245,13 +245,10 @@ Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
 		vertexSet[i]->dist = INF;
 		vertexSet[i]->path = nullptr;
 	}
-	cout <<"id:  " << origin->getId() << endl;
 	Vertex<T>* s = findVertex(origin);
 
 	if(s!=nullptr)
 		s->dist = 0;
-	else
-		cout << "s is null"<<endl;
 	return s;
 }
 
@@ -277,7 +274,7 @@ bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
 	auto s = initSingleSource(origin);
-	cout<< "id dijkstra: " << origin->getId() << endl;
+	//cout<< "id dijkstra: " << origin->getId() << endl;
 
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
@@ -331,22 +328,21 @@ float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
 */
 template<class T>
 vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
+	cout << "ola7" << endl;
+
 	vector<T> res;
 	auto v = findVertex(dest);
-	if (v == nullptr)// missing or disconnected
-		return res;
-
-	 if( v->dist == INF)
+	if (v == nullptr || v->dist == INF)
 		 return res;
-		cout << "ola7" << endl;
+
 
 	while(v != nullptr)
 	{
 		res.push_back(v->info);
 		if(v->path != nullptr )
-		v = v->path;
+			v = v->path;
 		else
-			cout << "path null" << endl;
+			break;
 	}
 
 	reverse(res.begin(), res.end());

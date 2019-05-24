@@ -359,8 +359,8 @@ int main()
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
 	pois.push_back(p.findPoI(994135665));
-	pois.push_back(p.findPoI(994138090));
-	pois.push_back(p.findPoI(994137583));
+	//pois.push_back(p.findPoI(994138090));
+//	pois.push_back(p.findPoI(994137583));
 
 	Tourist t(1, "dsadsdas", pois);
 	p.addTourist(t);
