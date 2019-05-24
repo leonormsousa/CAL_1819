@@ -190,8 +190,14 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     for (size_t i=0; i<points.size()-1; i++)
     {
     	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[i+1]);
-    	if(poi.size()>0)
-    		auxVector.push_back(poi);
+    	if(poi.size()==0)
+		{
+    		cout << "aqui" << endl;
+    		vector<PoI*> p = {};
+    		return p;
+		}
+    	else
+    		cout << "yeyyyy " << endl;
     }
 
     resp=auxVector[0];
@@ -254,7 +260,15 @@ for(int i=0;i < vectorAux[0].size();i++)
     for (size_t i=0; i<vectorAux.size(); i++)
     {
     	if(((*vectorAux[i][0])== (*point1)) && ((*vectorAux[i][vectorAux[i].size()-1]) == (*point2)))
-    		resps.push_back(calculateRouteWithOrderedPoints(vectorAux[i]));
+    	{
+    		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i]);
+    		if(p.size()>0)
+    		{
+    			resps.push_back(p);
+    			cout << "aqui2" << endl;
+
+    		}
+    	}
     }
     resp=resps[0];
 

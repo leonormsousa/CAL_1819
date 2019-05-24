@@ -328,7 +328,7 @@ float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
 */
 template<class T>
 vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
-	cout << "ola7" << endl;
+	//cout << "ola7" << endl;
 
 	vector<T> res;
 	auto v = findVertex(dest);
