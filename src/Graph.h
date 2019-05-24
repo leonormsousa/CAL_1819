@@ -189,6 +189,8 @@ Vertex<T> * Graph<T>::addVertex(const T &in) {
 	if (v != nullptr)
 		return v;
 	v = new Vertex<T>(in);
+    cout << v->getInfo()->getId() << endl;
+
 	vertexSet.push_back(v);
 	return v;
 }
@@ -239,11 +241,9 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 */
 template<class T>
 Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
-	cout << "ola6  " << vertexSet.size() << endl;
-	cout << "ola6  " << vertexSet[0]->getInfo()->getId() << endl;
 
 	for (auto v : vertexSet) {
-		cout <<"ola6 dentro for" << endl;
+		cout << v->getInfo()->getId() << endl;
 		v->dist = INF;
 		v->path = nullptr;
 	}

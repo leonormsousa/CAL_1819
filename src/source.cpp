@@ -62,7 +62,7 @@ void features(Company &p)
 			if(p.addTourist(stoi(id), nome))
 				cout << "O turista " << nome << " foi adicionado." << endl;
 			else
-				cout << "O turista com o id " << id << " j� existe." << endl;
+				cout << "O turista com o id " << id << " ja existe." << endl;
 			break;
 		}
 		case 3: {
@@ -107,7 +107,7 @@ void features(Company &p)
 					if(it->addPoI(poi))
 						cout << "Ponto de interesse " << poiID << " adicionado ao turista " << it->getName() <<endl;
 					else
-						cout << "Ponto de interesse " << poiID << " j� foi previamente adicionado ao turista " << it->getName() <<endl;
+						cout << "Ponto de interesse " << poiID << " ja foi previamente adicionado ao turista " << it->getName() <<endl;
             	}
             	else
             		cout << "Ponto de interesse " << poiID << " nao existe." << endl;

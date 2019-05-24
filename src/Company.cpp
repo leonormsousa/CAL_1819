@@ -97,15 +97,13 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 		word = word.substr(src.size()+2);
         string dest = word.substr(0,word.find_first_not_of("0123456789.",0));
 
+
         PoI vertex(stoi(id),stod(src),stod(dest));
         pois.push_back(vertex);
         if(i==0)
-        {
-        	PoI* poi;
-        	*poi = PoI(stoi(id), stod(src), stod(dest));
-        	initialPoint=poi;
-        }
-        map.addVertex(&vertex);
+        	initialPoint=&pois[0];
+
+        map.addVertex(&pois[i]);
     }
 
 	cout << "Reading edges..." << endl;
