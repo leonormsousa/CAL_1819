@@ -197,20 +197,23 @@ void features(Company &p)
             break;
         }
         case 9: {
+        	string initial, final;
+			cout << "Ponto de interesse inicial: ";
+			cin>>initial;
+			cout << "Ponto de interesse final: ";
+			cin>>final;
+			PoI* initialPoI = p.findPoI(stoi(initial));
+			PoI* finalPoI = p.findPoI(stoi(final));
+
         	vector<PoI*> points;
         	for (size_t i=0; i<(*p.getTourists()).size(); i++)
         		points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
 
+        	points.insert(points.begin(), initialPoI);
+        	points.insert(points.end(), finalPoI);
+
         	sort(points.begin()+1, points.end()-1);
         	points.erase( unique(points.begin(), points.end()), points.end());
-
-        	//auto it=find(points.begin(), points.end(), p.getinitialPoint());
-        	//if (it!= points.end())
-        		//points.erase(it);
-
-//        	points.insert(points.begin(), p.getinitialPoint());
-//        	cout << p.getinitialPoint()->getId()<< endl;
-//        	points.insert(points.end(), p.getinitialPoint());
 
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
         	if(routes.size()==0)
@@ -218,18 +221,57 @@ void features(Company &p)
         		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
         		break;
         	}
+        	GraphViewer * gv = new GraphViewer(600, 600, true);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
+
 			for (size_t j=0; j<routes.size()-1; j++)
+			{
 				cout << routes[j]->getId() << " -> ";
+				gv->addNode(routes[j]->getId());
+				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
+
+			}
 			cout << routes[routes.size()-1]->getId() << endl;
+			gv->addNode(routes[routes.size()-1]->getId());
+			gv->rearrange();
+			sleep(7);
+			gv->closeWindow();
 			break;
         }
         case 10:{
-        	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(5);
+        	string initial, final;
+        	cout << "Ponto de interesse inicial: ";
+        	cin>>initial;
+        	cout << "Ponto de interesse final: ";
+        	cin>>final;
+        	PoI* initialPoI = p.findPoI(stoi(initial));
+        	PoI* finalPoI = p.findPoI(stoi(final));
+
+        	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(6, initialPoI, finalPoI);
+           	GraphViewer * gv = new GraphViewer(600, 600, true);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
         	for (size_t i=0; i<routes.size(); i++)
 			{
-				for (size_t j=0; j<routes[i].size(); j++)
+        		if(routes[i].size()==0)
+        		{
+        			cout << "Nao foi possivel encontrar um percurso a passar pelos pontos inicial e final indicados para alguns dos turistas"<< endl;
+        			continue;
+        		}
+				for (size_t j=0; j<routes[i].size()-1; j++)
+				{
 					cout << routes[i][j]->getId() << " -> ";
-				cout << endl;
+					gv->addNode(routes[i][j]->getId());
+					gv->addEdge(routes[i][j]->getId(), routes[i][j]->getId(),routes[i][j+1]->getId(), 0);
+				}
+				cout << routes[i][routes[i].size()-1]->getId() << endl;
+				gv->addNode(routes[i][routes.size()-1]->getId());
+				gv->rearrange();
+				sleep(7);
+				gv->closeWindow();
 			}
             break;
         }
@@ -360,37 +402,38 @@ int main()
 
 	vector<PoI*> pois;
 	vector<PoI*> poiss;
+	vector<PoI*> poisss;
+	vector<PoI*> poissss;
 
-	pois.push_back(p.findPoI(994136199));
+	//pois.push_back(p.findPoI(994136199));
 	pois.push_back(p.findPoI(994138487));
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
 	poiss.push_back(p.findPoI(994135665));
 	poiss.push_back(p.findPoI(994138090));
-	poiss.push_back(p.findPoI(994137583));
-	//poiss.push_back(p.findPoI(26018644));
+	//poiss.push_back(p.findPoI(994137583));
+	poisss.push_back(p.findPoI(994137873));
+	poisss.push_back(p.findPoI(994136619));
+	poisss.push_back(p.findPoI(994135665));
+
+	poissss.push_back(p.findPoI(26018641));
+	poissss.push_back(p.findPoI(26018644));
+	poissss.push_back(p.findPoI(26018646));
+	poissss.push_back(p.findPoI(26018648));
+
 	Tourist t(1, "dsadsdas", pois);
 	Tourist t2(2, "dsadsdas", poiss);
-
+	Tourist t3(3, "dsha", poisss);
+	Tourist t4(4, "fjdsho", poissss);
 	p.addTourist(t);
 	p.addTourist(t2);
-	/*
-	for(size_t i=0; i<p.getPois().size();i++)
-	{
-		gv->addNode(p.getPois()[i].getId());
-	}
-	*/
-	/*
-	gv->addEdge(0, 0, 1, EdgeType::DIRECTED);
+	p.addTourist(t3);
+	p.addTourist(t4);
 
-	gv->setVertexLabel(2, "This is a node");
-	gv->setEdgeLabel(0, "This an edge");
-	gv->setVertexColor(2, "green");
-	gv->setEdgeColor(0, "yellow");
-	gv->setBackground("image.png");
-	*/
-	//gv->rearrange();
-	//sleep(5);
+	p.addBus(300);
+	p.addBus(304);
+	p.addBus(303);
+	p.addBus(350);
 
 	features(p);
 
@@ -399,6 +442,5 @@ int main()
 	cout << "Joao Praca" << endl <<  "Leonor M. Sousa" << endl << "Silvia Rocha" << endl <<
 			"Informatics and Computing Engineering Students in the Faculty of Engineering of the University of Porto"<< endl << endl;
 
-	//gv->closeWindow();
 	return 0;
 }

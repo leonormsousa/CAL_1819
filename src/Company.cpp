@@ -286,22 +286,24 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
         vector<Tourist*> auxt;
         auxt.push_back(&(*find(tourists.begin(), tourists.end(), *it)));
 		auxp = *(it->getPoIs());
-		auto itt = it;
+		auto itt = it+1;
 		while(itt != tous.end())
 		{
             vector<PoI*> difference;
             set_difference((*(itt->getPoIs())).begin(), (*(itt->getPoIs())).end(), (*(it->getPoIs())).begin(),(*(it->getPoIs())).end(), inserter(difference, difference.begin()));
 			if (difference.size() <= tolerance)
 			{
+				cout << "difference: " << difference.size()<<endl;
 				tolerance -= difference.size();
 				auxt.push_back(&(*find(tourists.begin(), tourists.end(), *itt)));
 				auxp.insert(auxp.end(), difference.begin(), difference.end());
-				itt++;
-				tous.erase(itt-1);
+				tous.erase(itt);
+				cout << "difference1: " << difference.size()<<endl;
 				continue;
 			}
 			itt++;
 		}
+		cout << "here" << endl;
 		routes.push_back(auxp);
 		touristGroups.push_back(auxt);
 		it++;
@@ -309,39 +311,52 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
 	return touristGroups;
 }
 
-vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance){
+vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance, PoI* initial, PoI* final){
     vector<vector<Tourist*> > touristGroups, oldTouristGroups;
+    cout << initial->getId() << "    " << final->getId() << endl;
     vector<vector <PoI*> > oldRoutes, routes;
     oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes);
+    bool breakCycle=false;
     do
     {
         initialTolerance--;
         touristGroups=createTouristGroups(initialTolerance, routes);
         if (routes.size()>buses.size())
             break;
-        if (touristGroups.size()>busesCapacity)
-            break;   
-    }while (touristGroups.size()>buses.size());
+        for(size_t i=0; i<touristGroups.size();i++)
+        	if (touristGroups[i].size()>busesCapacity)
+        		breakCycle=true;
+    }while (touristGroups.size()>buses.size() && (!breakCycle));
+   breakCycle=false;
+   oldTouristGroups= touristGroups;
+   oldRoutes=routes;
+   routes.clear();
     do
     {
+    	cout << "2nd cycle  " << routes.size() << endl;
         initialTolerance++;
         touristGroups=createTouristGroups(initialTolerance, routes);
         if (routes.size()>buses.size())
             break;
-        if (touristGroups.size()>busesCapacity)
-            break;   
-    }while (touristGroups.size()<oldTouristGroups.size());
-    routes=oldRoutes;
-    tourist_groups=oldTouristGroups;
+        for(size_t i=0; i<touristGroups.size();i++)
+            if (touristGroups[i].size()>busesCapacity || touristGroups[i].size()==tourists.size())
+                breakCycle=true;
+    	cout << "2nd cycle  " << routes.size() << endl;
+    }while ((touristGroups.size()<oldTouristGroups.size()) && (!breakCycle));
+
 
     for (size_t i=0; i<routes.size(); i++)
     {
-    	auto it=find(routes[i].begin(), routes[i].end(),initialPoint);
-		if (it!= routes[i].end())
-			routes[i].erase(it);
-		routes[i].insert(routes[i].begin(), initialPoint);
-		routes[i].insert(routes[i].end(), initialPoint);
+    	sort(routes[i].begin(), routes[i].end());
+    	routes[i].erase( unique(routes[i].begin(), routes[i].end()), routes[i].end());
+    	routes[i].insert(routes[i].begin(), initial);
+    	routes[i].insert(routes[i].end(), final);
+
+    	for(size_t j=0;j<routes[i].size();j++)
+    		cout<< "id routes " << i << "  "  << routes[i][j]->getId() << endl;
+
         routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
+
     }
     return routes;
 }

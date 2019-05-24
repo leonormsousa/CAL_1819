@@ -33,7 +33,7 @@ public:
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
     vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);
-    vector<vector <PoI*> > createGroupsBasedOnBuses(unsigned int tolerance);
+    vector<vector <PoI*> > createGroupsBasedOnBuses(unsigned int tolerance, PoI* initial, PoI* final);
     PoI* findPoI(int id);
     Vertex<PoI*>* findVertex(int id);
     vector<Edge<PoI*>> getUnavailableRoads();
