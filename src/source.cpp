@@ -198,24 +198,29 @@ void features(Company &p)
         }
         case 9: {
         	vector<PoI*> points;
-        	for (size_t i=0; i<(p.getTourists())->size(); i++)
-        		points.insert(points.begin(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
+        	for (size_t i=0; i<(*p.getTourists()).size(); i++)
+        		points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
 
-        	//sort(points.begin(), points.end());
-        	//points.erase( unique(points.begin(), points.end()), points.end());
+        	sort(points.begin()+1, points.end()-1);
+        	points.erase( unique(points.begin(), points.end()), points.end());
 
-//        	auto it=find(points.begin(), points.end(), p.getinitialPoint());
-//        	if (it!= points.end())
-//        		points.erase(it);
+        	//auto it=find(points.begin(), points.end(), p.getinitialPoint());
+        	//if (it!= points.end())
+        		//points.erase(it);
 
 //        	points.insert(points.begin(), p.getinitialPoint());
 //        	cout << p.getinitialPoint()->getId()<< endl;
 //        	points.insert(points.end(), p.getinitialPoint());
 
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
-			for (size_t j=0; j<routes.size(); j++)
+        	if(routes.size()==0)
+        	{
+        		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
+        		break;
+        	}
+			for (size_t j=0; j<routes.size()-1; j++)
 				cout << routes[j]->getId() << " -> ";
-
+			cout << routes[routes.size()-1]->getId() << endl;
 			break;
         }
         case 10:{
@@ -354,16 +359,21 @@ int main()
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
 	vector<PoI*> pois;
+	vector<PoI*> poiss;
+
 	pois.push_back(p.findPoI(994136199));
 	pois.push_back(p.findPoI(994138487));
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
-	pois.push_back(p.findPoI(994135665));
-	//pois.push_back(p.findPoI(994138090));
-//	pois.push_back(p.findPoI(994137583));
-
+	poiss.push_back(p.findPoI(994135665));
+	poiss.push_back(p.findPoI(994138090));
+	poiss.push_back(p.findPoI(994137583));
+	//poiss.push_back(p.findPoI(26018644));
 	Tourist t(1, "dsadsdas", pois);
+	Tourist t2(2, "dsadsdas", poiss);
+
 	p.addTourist(t);
+	p.addTourist(t2);
 	/*
 	for(size_t i=0; i<p.getPois().size();i++)
 	{

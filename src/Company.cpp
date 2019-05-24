@@ -192,20 +192,16 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[i+1]);
     	if(poi.size()==0)
 		{
-    		cout << "aqui" << endl;
     		vector<PoI*> p = {};
     		return p;
 		}
     	else
-    		cout << "yeyyyy " << endl;
+    		auxVector.push_back(poi);
     }
 
     resp=auxVector[0];
-    for (size_t i=0; i<resp.size(); i++)
-      {
-      	cout << i << "   withorder    " << resp[i]->getId() << endl;
-      }
-    for (size_t i=0; i<auxVector.size(); i++)
+
+    for (size_t i=1; i<auxVector.size(); i++)
     {
         auxVector[i].erase(auxVector[i].begin());
         resp.insert(resp.end(), auxVector[i].begin(), auxVector[i].end());
@@ -255,20 +251,19 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     vector<PoI*> aux;
 
     dfs(points, vectorAux);
-for(int i=0;i < vectorAux[0].size();i++)
-	cout << i << "   " << vectorAux[0][i]->getId() << endl;
     for (size_t i=0; i<vectorAux.size(); i++)
     {
     	if(((*vectorAux[i][0])== (*point1)) && ((*vectorAux[i][vectorAux[i].size()-1]) == (*point2)))
     	{
     		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i]);
     		if(p.size()>0)
-    		{
     			resps.push_back(p);
-    			cout << "aqui2" << endl;
-
-    		}
     	}
+    }
+    if(resps.size()==0)
+    {
+    	vector<PoI*> p = {};
+    	return p;
     }
     resp=resps[0];
 
