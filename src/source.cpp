@@ -44,7 +44,11 @@ void features(Company &p)
 			cout << "Introduza o ID representativo do autocarro: ";
 			cin >> id;
 			cout << endl;
-			p.addBus(stoi(id));
+
+			if(p.addBus(stoi(id)))
+				cout << "O autocarro " << id << " foi adicionado com sucesso." << endl;
+			else
+				cout << "O autocarro " << id << " ja existe." << endl;
 			break;
 		}
 		case 2: {
@@ -60,7 +64,7 @@ void features(Company &p)
 			cin >> id;
 			cout << endl;
 			if(p.addTourist(stoi(id), nome))
-				cout << "O turista " << nome << " foi adicionado." << endl;
+				cout << "O turista " << nome << " foi adicionado com sucesso." << endl;
 			else
 				cout << "O turista com o id " << id << " ja existe." << endl;
 			break;
@@ -70,8 +74,10 @@ void features(Company &p)
 			cout << "ID do autocarro a remover: ";
 			cin >> id;
 			cout << endl;
-			p.removeBus(stoi(id));
-			cout << "Autocarro " << id << " removido com sucesso." << endl;
+			if(p.removeBus(stoi(id)))
+				cout << "Autocarro " << id << " removido com sucesso." << endl;
+			else
+				cout << "Autocarro " << id << " nao encontrado." << endl;
 			break;
 		}
 		case 4: {
@@ -105,12 +111,12 @@ void features(Company &p)
             	poi = p.findPoI(stoi(poiID));
             	if(poi != NULL){
 					if(it->addPoI(poi))
-						cout << "Ponto de interesse " << poiID << " adicionado ao turista " << it->getName() <<endl;
+						cout << "Ponto de interesse com id " << poiID << " adicionado ao turista " << it->getName() <<endl;
 					else
-						cout << "Ponto de interesse " << poiID << " ja foi previamente adicionado ao turista " << it->getName() <<endl;
+						cout << "Ponto de interesse com id " << poiID << " ja foi previamente adicionado ao turista " << it->getName() <<endl;
             	}
             	else
-            		cout << "Ponto de interesse " << poiID << " nao existe." << endl;
+            		cout << "Ponto de interesse com id " << poiID << " nao existe." << endl;
             }
             else
             	cout<< "O id " << id << " nao corresponde a nenhum turista"<<endl;
@@ -337,23 +343,24 @@ int main()
 	cout << "==========================" << endl;
 
 	string city = getMapName();
-
-	/*GraphViewer * gv = new GraphViewer(600, 600, true);
+/*
+	GraphViewer * gv = new GraphViewer(600, 600, true);
 	gv->createWindow(600, 600);
 	gv->defineVertexColor("blue");
-	gv->defineEdgeColor("black");*/
-
+	gv->defineEdgeColor("black");
+*/
 	Company p = Company();
 	string edgeFile= "T03/" + city + "/T03_Edges_" + city + ".txt";
 	string vertexFile= "T03/" + city + "/T03_Nodes_X_Y_" + city + ".txt";
 	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
-
-	/*for(size_t i=0; i<p.getPois().size();i++)
+	/*
+	for(size_t i=0; i<p.getPois().size();i++)
 	{
 		gv->addNode(p.getPois()[i].getId());
-	}*/
+	}
+	*/
 	/*
 	gv->addEdge(0, 0, 1, EdgeType::DIRECTED);
 

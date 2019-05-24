@@ -13,15 +13,28 @@ vector<Edge<PoI*>> Company::getUnavailableRoads(){
 }
 
 
-void Company::addBus(int id)
+bool Company::addBus(int id)
 {
-    buses.push_back(Bus(id));
+    Bus b(id);
+
+	auto it = find(buses.begin(), buses.end(), b);
+	if(it == buses.end())
+	{
+		buses.push_back(b);
+		return true;
+	}
+	return false;
 }
     
-void Company::removeBus(int id)
+bool Company::removeBus(int id)
 {
     auto it = find(buses.begin(), buses.end(), Bus(id));
-    buses.erase(it);
+	if(it!=buses.end())
+	{
+		buses.erase(it);
+		return true;
+	}
+	return false;
 }
 
 bool Company::addTourist(int id, string name)
@@ -32,7 +45,6 @@ bool Company::addTourist(int id, string name)
 	if(it == tourists.end())
 	{
 		tourists.push_back(t);
-		cout << "tourist " << &tourists[0] << endl;
 		return true;
 	}
 	return false;
@@ -148,7 +160,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
                 cout << "POI doesnt exist"<< endl;
                 return;
             }
-            pois[PoI].setType(word);
+            pois[PoI].setType(word.substr(8));
         }
     }
 }
@@ -358,7 +370,6 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 PoI* Company::findPoI(int id)
 {
 	PoI poi = PoI(id, 0, 0);
-	cout << "findpoi1" << endl;
 	vector<PoI>::iterator it = find(pois.begin(), pois.end(), poi);
 	if(it == pois.end())
 		return NULL;
