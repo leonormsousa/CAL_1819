@@ -189,9 +189,10 @@ Vertex<T> * Graph<T>::addVertex(const T &in) {
 	if (v != nullptr)
 		return v;
 	v = new Vertex<T>(in);
-    cout << v->getInfo()->getId() << endl;
 
 	vertexSet.push_back(v);
+    cout << vertexSet[vertexSet.size()-1]->getInfo()->getId() << endl;
+
 	return v;
 }
 
