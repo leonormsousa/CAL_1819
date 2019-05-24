@@ -133,24 +133,19 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
     getline(edges, line);
     for(int i=0; i< stoi(line);i++)
     {
-		PoI source =PoI(0, 0, 0);
-
-        PoI destination(0,0,0);
         getline(edges, word);
 		word = word.substr(1);
         string src = word.substr(0,word.find_first_not_of("0123456789",0));
 		word = word.substr(src.size()+2);
         string dest= word.substr(0,word.find_first_not_of("0123456789",0));
 
-		source.setID(stoi(src));
-		vector<PoI>::iterator it = find(pois.begin(), pois.end(), source);
-		
-		destination.setID(stoi(src));
-		vector<PoI>::iterator it2 = find(pois.begin(), pois.end(), destination);
+		PoI* poi1 = findPoI(stoi(src));
+		PoI* poi2 = findPoI(stoi(dest));
 
-		double distance = sqrt(pow(it2->getX() - it->getX(), 2) + pow(it2->getY() - it->getY(), 2));
 
-		map.addEdge(&(*it), &(*it2), distance);
+		double distance = sqrt(pow(poi2->getX() - poi1->getX(), 2) + pow(poi2->getY() - poi1->getY(), 2));
+
+		map.addEdge(poi1, poi2, distance);
 
     }
 
@@ -174,6 +169,10 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
             pois[PoI].setType(word.substr(8));
         }
     }
+
+    Vertex<PoI*>* v= findVertex(26018648);
+    for(int i=0; i<v->getAdj().size(); i++)
+    		cout << i << "  " << v->getAdj()[i]->getDest()->getInfo()->getId() << endl;
 }
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
@@ -189,7 +188,7 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
     vector<PoI*> resp;
     if (points.size()<=2)
         return points;
-
+cout << "ola3 size:" << points.size()<<endl;
     for (size_t i=0; i<points.size()-1; i++)
     {
     	cout << "ola3  " << i << "  "  << points[i]->getId() << endl;
@@ -231,7 +230,7 @@ void Company::dfs(int depth, int s, int i, vector<PoI*>& c, const vector<PoI*>& 
     }
     else
     {
-        for (int j = i + 1; j < (int)v.size(); ++j)
+        for (int j = i + 1; j < (int)v.size(); j++)
         {
             c.push_back(v[j]);
             dfs(depth + 1, s, j, c, v, res);
@@ -256,15 +255,15 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
 
     vector<PoI*> aux;
 
-    dfs(0, points.size()-2, -1, aux, points, vectorAux);
-	cout << "calculate with unordered: " << vectorAux[0][0]->getId()<< endl;
-	cout << initialPoint->getId() << endl;
+    dfs(0, points.size(), -1, aux, points, vectorAux);
+	cout << "calculate with unordered: " << vectorAux.size()<< endl;
+
     for (size_t i=0; i<vectorAux.size(); i++)
     {
-        vectorAux[i].insert(vectorAux[i].begin(), initialPoint);
-        vectorAux[i].insert(vectorAux[i].end(), initialPoint);
+     //   vectorAux[i].insert(vectorAux[i].begin(), initialPoint);
+       // vectorAux[i].insert(vectorAux[i].end(), initialPoint);
     	cout <<"ola2  " <<  i << endl;
-    	cout << "calculate with unordered: " << vectorAux[i][0]->getId()<< endl;
+    	cout << "calculate with unordered: " << vectorAux[i].size()<< endl;
         resps.push_back(calculateRouteWithOrderedPoints(vectorAux[i]));
     }
     resp=resps[0];

@@ -188,7 +188,6 @@ Vertex<T> * Graph<T>::addVertex(const T &in) {
 		return v;
 	v = new Vertex<T>(in);
 	vertexSet.push_back(v);
-	//cout << vertexSet[0]->getInfo()->getId()<< endl;
 	return v;
 }
 
@@ -220,8 +219,11 @@ void Graph<T>::removeEdge(Edge<T> edge){
 template <class T>
 Vertex<T>* Graph<T>::findVertex(const T & inf) const {
 	for (auto v : vertexSet)
-		if (v->info == inf)
-			return v;
+	{
+		if (*(v->info) == *inf)
+				return v;
+	}
+
 	return nullptr;
 }
 
@@ -245,7 +247,7 @@ Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
 	}
 	cout <<"id:  " << origin->getId() << endl;
 	Vertex<T>* s = findVertex(origin);
-	cout<<"ola6" << endl;
+
 	if(s!=nullptr)
 		s->dist = 0;
 	else
@@ -274,7 +276,6 @@ bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 */
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
-	cout<< "ola5" << endl;
 	auto s = initSingleSource(origin);
 	cout<< "id dijkstra: " << origin->getId() << endl;
 
@@ -332,10 +333,22 @@ template<class T>
 vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
 	vector<T> res;
 	auto v = findVertex(dest);
-	if (v == nullptr || v->dist == INF) // missing or disconnected
+	if (v == nullptr)// missing or disconnected
 		return res;
-	for (; v != nullptr; v = v->path)
+
+	 if( v->dist == INF)
+		 return res;
+		cout << "ola7" << endl;
+
+	while(v != nullptr)
+	{
 		res.push_back(v->info);
+		if(v->path != nullptr )
+		v = v->path;
+		else
+			cout << "path null" << endl;
+	}
+
 	reverse(res.begin(), res.end());
 	return res;
 }

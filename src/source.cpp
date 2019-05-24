@@ -201,12 +201,12 @@ void features(Company &p)
         	for (size_t i=0; i<(p.getTourists())->size(); i++)
         		points.insert(points.begin(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
 
-        	sort(points.begin(), points.end());
-        	points.erase( unique(points.begin(), points.end()), points.end());
+        	//sort(points.begin(), points.end());
+        	//points.erase( unique(points.begin(), points.end()), points.end());
 
-        	auto it=find(points.begin(), points.end(), p.getinitialPoint());
-        	if (it!= points.end())
-        		points.erase(it);
+//        	auto it=find(points.begin(), points.end(), p.getinitialPoint());
+//        	if (it!= points.end())
+//        		points.erase(it);
 
 //        	points.insert(points.begin(), p.getinitialPoint());
 //        	cout << p.getinitialPoint()->getId()<< endl;
@@ -354,12 +354,14 @@ int main()
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
 
 	vector<PoI*> pois;
-	pois.push_back(p.findPoI(26018644));
-	pois.push_back(p.findPoI(26018646));
-	pois.push_back(p.findPoI(26018648));
-	pois.push_back(p.findPoI(26018650));
-	pois.push_back(p.findPoI(26018652));
-//	pois.push_back(p.findPoI(1330250582));
+	pois.push_back(p.findPoI(994136199));
+	pois.push_back(p.findPoI(994138487));
+	pois.push_back(p.findPoI(994137873));
+	pois.push_back(p.findPoI(994136619));
+	pois.push_back(p.findPoI(994135665));
+	pois.push_back(p.findPoI(994138090));
+	pois.push_back(p.findPoI(994137583));
+
 	Tourist t(1, "dsadsdas", pois);
 	p.addTourist(t);
 	/*
