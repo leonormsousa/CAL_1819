@@ -19,5 +19,6 @@ public:
     void setY(double y) { this->y=y;}
     void setID(int id) {this->id=id;}
     void setType(string type) {this->type = type;}
-    bool operator==(PoI p){return id == p.getId();}
+    bool operator==(PoI p){return (id == p.getId());}
+    bool operator<(PoI p) { return (id<p.getId());}
 };

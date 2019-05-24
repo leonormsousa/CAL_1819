@@ -202,23 +202,19 @@ void features(Company &p)
         		points.insert(points.begin(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
 
         	sort(points.begin(), points.end());
-
         	points.erase( unique(points.begin(), points.end()), points.end());
 
         	auto it=find(points.begin(), points.end(), p.getinitialPoint());
         	if (it!= points.end())
         		points.erase(it);
 
-        	points.insert(points.begin(), p.getinitialPoint());
-        	cout << p.getinitialPoint()->getId()<< endl;
-        	points.insert(points.end(), p.getinitialPoint());
-        	cout << "ola" << endl;
+//        	points.insert(points.begin(), p.getinitialPoint());
+//        	cout << p.getinitialPoint()->getId()<< endl;
+//        	points.insert(points.end(), p.getinitialPoint());
 
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
-        	cout << "ola" << endl;
 			for (size_t j=0; j<routes.size(); j++)
 				cout << routes[j]->getId() << " -> ";
-        	cout << "ola" << endl;
 
 			break;
         }
@@ -350,11 +346,22 @@ int main()
 	gv->defineEdgeColor("black");
 */
 	Company p = Company();
+
 	string edgeFile= "T03/" + city + "/T03_Edges_" + city + ".txt";
 	string vertexFile= "T03/" + city + "/T03_Nodes_X_Y_" + city + ".txt";
 	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
+
+	vector<PoI*> pois;
+	pois.push_back(p.findPoI(26018644));
+	pois.push_back(p.findPoI(26018646));
+	pois.push_back(p.findPoI(26018648));
+	pois.push_back(p.findPoI(26018650));
+	pois.push_back(p.findPoI(26018652));
+//	pois.push_back(p.findPoI(1330250582));
+	Tourist t(1, "dsadsdas", pois);
+	p.addTourist(t);
 	/*
 	for(size_t i=0; i<p.getPois().size();i++)
 	{

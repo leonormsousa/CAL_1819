@@ -173,10 +173,8 @@ template <class T>
 double Graph<T>::getEdgeWeight(const T &sourc, const T &dest)
 {
 	auto s = findVertex(sourc);
-	//for (auto it=s->getAdj().begin(); it!=s->getAdj().end(); it++)
 	for(size_t i = 0; i < s->getAdj().size(); i++)
 	{
-		//if (*(it->getDest())== dest);
 		if(s->getAdj()[i]->getDest()->getInfo() == dest)
 			return s->getAdj()[i]->getWeight();
 	}
@@ -189,10 +187,8 @@ Vertex<T> * Graph<T>::addVertex(const T &in) {
 	if (v != nullptr)
 		return v;
 	v = new Vertex<T>(in);
-
 	vertexSet.push_back(v);
-    cout << vertexSet[vertexSet.size()-1]->getInfo()->getId() << endl;
-
+	//cout << vertexSet[0]->getInfo()->getId()<< endl;
 	return v;
 }
 
@@ -243,19 +239,17 @@ vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 template<class T>
 Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
 
-	for (auto v : vertexSet) {
-		cout << v->getInfo()->getId() << endl;
-		v->dist = INF;
-		v->path = nullptr;
+	for (unsigned int i=0; i< vertexSet.size(); i++){
+		vertexSet[i]->dist = INF;
+		vertexSet[i]->path = nullptr;
 	}
-	cout<<"ola6" <<endl;
+	cout <<"id:  " << origin->getId() << endl;
 	Vertex<T>* s = findVertex(origin);
 	cout<<"ola6" << endl;
 	if(s!=nullptr)
 		s->dist = 0;
 	else
 		cout << "s is null"<<endl;
-	cout << "ola6" << endl;
 	return s;
 }
 
@@ -282,15 +276,12 @@ template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
 	cout<< "ola5" << endl;
 	auto s = initSingleSource(origin);
-	cout<< "ola5" << endl;
+	cout<< "id dijkstra: " << origin->getId() << endl;
 
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
-	cout<< "ola5" << endl;
 
 	while (!q.empty()) {
-		cout<< "ola5" << endl;
-
 		auto v = q.extractMin();
 		for (auto e : v->outgoing) {
 			auto oldDist = e->dest->dist;

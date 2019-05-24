@@ -23,6 +23,8 @@ public:
     vector<Tourist>* getTourists();
     bool addUnavailableRoad(Edge<PoI*>);
     bool removeUnavailableRoad(Edge<PoI*>);
+    bool addTourist(Tourist t);
+
     void initializeGraph(string edgeFile, string vertexFile, string tagFile);
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
     int findPoIindex(int id);
