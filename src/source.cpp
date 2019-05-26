@@ -23,12 +23,12 @@ void features(Company &p)
 		cout << "8 - Assinalar as obras de uma determinada rua como terminadas  " << endl;
 		cout << "9 - Calculo do caminho mais curto/rentavel sem grupos " << endl;
 		cout << "10 - Calculo do caminho mais curto/rentavel com grupos limitados " << endl;
-
+		cout << "11 - Calculo do caminho mais curto/rentavel sem grupos usando algoritmo ganancioso " << endl;
 		cout << "0 - Exit" << endl << endl;
 		cout << "Opcao? ";
 		cin >> option;
 		option = toupper(option);
-		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10)))
+		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11)))
 		{
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -274,6 +274,50 @@ void features(Company &p)
 				gv->closeWindow();
 			}
             break;
+        }
+		case 11: {
+        	string initial, final;
+			cout << "Ponto de interesse inicial: ";
+			cin>>initial;
+			cout << "Ponto de interesse final: ";
+			cin>>final;
+			PoI* initialPoI = p.findPoI(stoi(initial));
+			PoI* finalPoI = p.findPoI(stoi(final));
+
+        	vector<PoI*> points;
+        	for (size_t i=0; i<(*p.getTourists()).size(); i++)
+        		points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
+
+        	points.insert(points.begin(), initialPoI);
+        	points.insert(points.end(), finalPoI);
+
+        	sort(points.begin()+1, points.end()-1);
+        	points.erase( unique(points.begin(), points.end()), points.end());
+
+        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPointsDynamic(points);
+        	if(routes.size()==0)
+        	{
+        		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
+        		break;
+        	}
+        	GraphViewer * gv = new GraphViewer(600, 600, true);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
+
+			for (size_t j=0; j<routes.size()-1; j++)
+			{
+				cout << routes[j]->getId() << " -> ";
+				gv->addNode(routes[j]->getId());
+				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
+
+			}
+			cout << routes[routes.size()-1]->getId() << endl;
+			gv->addNode(routes[routes.size()-1]->getId());
+			gv->rearrange();
+			sleep(7);
+			gv->closeWindow();
+			break;
         }
 		case 0:{
 			return;
