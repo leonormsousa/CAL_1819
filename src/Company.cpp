@@ -272,6 +272,65 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     return resp;
 }
 
+vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points)
+{
+    //initializing variables
+    vector <vector<double> > weigths;
+    vector <vector <vector <PoI*> > > routes;
+    vector <PoI*> resp;
+    vector<double> aux;
+    vector <vector <PoI*> > auxx;
+    for (size_t i=0; i<points.size(); i++)
+    {
+        aux.push_back(0);
+        auxx.push_back({});
+    }
+    for (size_t i=0; i<points.size(); i++)
+    { 
+        weigths.push_back(aux); 
+        routes.push_back(auxx);
+    }
+    //calculating results for every pair of points
+    for (size_t i=0; i<points.size(); i++)
+    {
+        for (size_t j=0; j<=i; j++)
+        {
+            routes[i][j]=calculateRouteBetweenTwoPoints(points[i], points[j]);
+            weigths[i][j]=getWeight(routes[i][j]);
+            routes[j][i]=calculateRouteBetweenTwoPoints(points[j], points[i]);
+            weigths[j][i]=getWeight(routes[j][i]);
+        }
+    }
+    resp.push_back(points[0]);
+    size_t starting_point=0;
+    vector<PoI*> auxr;
+    //calculating best route using a greedy strategy
+    for (size_t i=0; i<points.size()-2; i++)
+    {
+        double min_weigth=INF;
+        size_t min_choice=0;
+        for (size_t k=0; k<points.size(); k++)
+            weigths[k][starting_point]=0;
+        for (size_t j=1; j<points.size()-1; j++)
+        {
+            double weigth=weigths[starting_point][j];
+            if (weigth!=0 && weigth<min_weigth)
+            {
+                min_weigth=weigth;
+                min_choice=j;
+            }
+        }
+        auxr = routes[starting_point][min_choice];
+        auxr.erase(auxr.begin());
+        resp.insert(resp.end(),auxr.begin(), auxr.end());
+        starting_point=min_choice;
+    }
+    auxr = routes[starting_point][points.size()-1];
+    auxr.erase(auxr.begin());
+    resp.insert(resp.end(),auxr.begin(), auxr.end());
+    return resp;
+}
+
 vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes){
     vector<Tourist> tous=tourists;
     vector<vector<Tourist*> > touristGroups;
