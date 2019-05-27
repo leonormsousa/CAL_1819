@@ -280,6 +280,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
     vector <PoI*> resp;
     vector<double> aux;
     vector <vector <PoI*> > auxx;
+
     for (size_t i=0; i<points.size(); i++)
     {
         aux.push_back(0);
@@ -290,17 +291,31 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
         weigths.push_back(aux); 
         routes.push_back(auxx);
     }
+
     //calculating results for every pair of points
     for (size_t i=0; i<points.size(); i++)
     {
         for (size_t j=0; j<=i; j++)
         {
-            routes[i][j]=calculateRouteBetweenTwoPoints(points[i], points[j]);
-            weigths[i][j]=getWeight(routes[i][j]);
-            routes[j][i]=calculateRouteBetweenTwoPoints(points[j], points[i]);
-            weigths[j][i]=getWeight(routes[j][i]);
+
+        	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[j]);
+        	if(poi.size()!=0)
+        	{
+        		routes[i][j] = poi;
+                weigths[i][j]=getWeight(routes[i][j]);
+        	}
+
+    		vector<PoI*> p2 = calculateRouteBetweenTwoPoints(points[j], points[i]);
+    		if(p2.size()!=0)
+    		{
+    			routes[j][i]=p2;
+    			weigths[j][i]=getWeight(routes[j][i]);
+    		}
+
         }
     }
+
+
     resp.push_back(points[0]);
     size_t starting_point=0;
     vector<PoI*> auxr;

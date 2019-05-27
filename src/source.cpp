@@ -221,6 +221,7 @@ void features(Company &p)
         		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
         		break;
         	}
+
         	GraphViewer * gv = new GraphViewer(600, 600, true);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
@@ -283,14 +284,12 @@ void features(Company &p)
 			cin>>final;
 			PoI* initialPoI = p.findPoI(stoi(initial));
 			PoI* finalPoI = p.findPoI(stoi(final));
-
         	vector<PoI*> points;
         	for (size_t i=0; i<(*p.getTourists()).size(); i++)
         		points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
 
         	points.insert(points.begin(), initialPoI);
         	points.insert(points.end(), finalPoI);
-
         	sort(points.begin()+1, points.end()-1);
         	points.erase( unique(points.begin(), points.end()), points.end());
 
@@ -300,6 +299,7 @@ void features(Company &p)
         		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
         		break;
         	}
+
         	GraphViewer * gv = new GraphViewer(600, 600, true);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
@@ -473,10 +473,10 @@ int main()
 	Tourist t2(2, "dsadsdas", poiss);
 	Tourist t3(3, "dsha", poisss);
 	Tourist t4(4, "fjdsho", poissss);
-	p.addTourist(t);
-	p.addTourist(t2);
-	p.addTourist(t3);
-	p.addTourist(t4);
+	//p.addTourist(t);
+	//p.addTourist(t2);
+	//p.addTourist(t3);
+	//p.addTourist(t4);
 
 	p.addBus(300);
 	p.addBus(304);
