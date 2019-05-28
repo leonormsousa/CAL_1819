@@ -173,7 +173,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
-    map.AStarShortestPath(point1);
+    map.dijkstraShortestPath(point1);
     return map.getPath(point1, point2);
 }
 
@@ -304,8 +304,6 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
         		routes[i][j] = poi;
                 weigths[i][j]=getWeight(routes[i][j]);
         	}
-        	else
-        		weigths[i][j]=0;
 
     		vector<PoI*> p2 = calculateRouteBetweenTwoPoints(points[j], points[i]);
     		if(p2.size()!=0)
@@ -313,8 +311,6 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
     			routes[j][i]=p2;
     			weigths[j][i]=getWeight(routes[j][i]);
     		}
-    		else
-    		    weigths[j][i]=0;
 
         }
     }
