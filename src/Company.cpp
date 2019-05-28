@@ -222,17 +222,15 @@ double Company::getWeight(vector<PoI*> pois)
 	return resp;
 }
 
-void Company::dfs(const vector<PoI*>& v, vector<vector<PoI*> > &res)
+void Company::getPaths(const vector<PoI*>& v, vector<vector<PoI*> > &res)
 {
-vector<PoI*> aux = v;
+	vector<PoI*> aux = v;
 	sort(aux.begin(), aux.end());
-        do
-        {
-            res.push_back(aux);
-        }
-        while (next_permutation(aux.begin(), aux.end()));
-
-
+	do
+	{
+		res.push_back(aux);
+	}
+	while (next_permutation(aux.begin(), aux.end()));
 }
 
 vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> points, bool aStar)
@@ -250,7 +248,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     vector<PoI*> aux;
     auxp.erase(auxp.begin());
     auxp.erase(auxp.end()-1);
-    dfs(auxp, vectorAux);
+    getPaths(auxp, vectorAux);
     for (size_t i=0; i<vectorAux.size(); i++)
     {
     	vectorAux[i].insert(vectorAux[i].begin(), point1);

@@ -30,7 +30,7 @@ public:
     vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2, bool aStar);
     int findPoIindex(int id);
     vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points, bool aStar);
-	void dfs(const vector<PoI*>& v, vector<vector<PoI*> > &res);
+	void getPaths(const vector<PoI*>& v, vector<vector<PoI*> > &res);
 	double getWeight(vector<PoI*> pois);
     vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points, bool aStar);
     vector<PoI*> calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points, bool aStar);
