@@ -296,7 +296,7 @@ void features(Company &p)
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPointsDynamic(points);
         	if(routes.size()==0)
         	{
-        		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
+        		cout << "Este algoritmo nao permite calcular um caminho possivel. Tente a opcao 9." << endl;
         		break;
         	}
 
@@ -453,7 +453,7 @@ int main()
 	vector<PoI*> poisss;
 	vector<PoI*> poissss;
 
-	/*//pois.push_back(p.findPoI(994136199));
+	//pois.push_back(p.findPoI(994136199));
 	pois.push_back(p.findPoI(994138487));
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
@@ -467,14 +467,14 @@ int main()
 	poissss.push_back(p.findPoI(26018641));
 	poissss.push_back(p.findPoI(26018644));
 	poissss.push_back(p.findPoI(26018646));
-	poissss.push_back(p.findPoI(26018648));*/
+	poissss.push_back(p.findPoI(26018648));
 
-	pois.push_back(p.findPoI(7));
+	/*pois.push_back(p.findPoI(7));
 		pois.push_back(p.findPoI(1));
 		pois.push_back(p.findPoI(2));
 		poiss.push_back(p.findPoI(3));
 		poisss.push_back(p.findPoI(3));
-		poissss.push_back(p.findPoI(6));
+		poissss.push_back(p.findPoI(6));*/
 
 	Tourist t(1, "dsadsdas", pois);
 	Tourist t2(2, "dsadsdas", poiss);

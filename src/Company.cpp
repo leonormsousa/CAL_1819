@@ -173,7 +173,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
-    map.dijkstraShortestPath(point1);
+    map.AStarShortestPath(point1);
     return map.getPath(point1, point2);
 }
 
@@ -245,16 +245,16 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     PoI* point2 = points[points.size()-1];
 
     vector<PoI*> aux;
-
-    dfs(points, vectorAux);
+    auxp.erase(auxp.begin());
+    auxp.erase(auxp.end()-1);
+    dfs(auxp, vectorAux);
     for (size_t i=0; i<vectorAux.size(); i++)
     {
-    	if(((*vectorAux[i][0])== (*point1)) && ((*vectorAux[i][vectorAux[i].size()-1]) == (*point2)))
-    	{
-    		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i]);
-    		if(p.size()>0)
-    			resps.push_back(p);
-    	}
+    	vectorAux[i].insert(vectorAux[i].begin(), point1);
+    	vectorAux[i].insert(vectorAux[i].end(), point2);
+		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i]);
+		if(p.size()>0)
+			resps.push_back(p);
     }
     if(resps.size()==0)
     {
