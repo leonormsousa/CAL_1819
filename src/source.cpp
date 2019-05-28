@@ -609,43 +609,6 @@ int main()
 	vector<PoI*> poisss;
 	vector<PoI*> poissss;
 
-/*	//pois.push_back(p.findPoI(994136199));
-	pois.push_back(p.findPoI(994138487));
-	pois.push_back(p.findPoI(994137873));
-	pois.push_back(p.findPoI(994136619));
-	poiss.push_back(p.findPoI(994135665));
-	poiss.push_back(p.findPoI(994138090));
-	//poiss.push_back(p.findPoI(994137583));
-	poisss.push_back(p.findPoI(994137873));
-	poisss.push_back(p.findPoI(994136619));
-	poisss.push_back(p.findPoI(994135665));
-
-	poissss.push_back(p.findPoI(26018641));
-	poissss.push_back(p.findPoI(26018644));
-	poissss.push_back(p.findPoI(26018646));
-	poissss.push_back(p.findPoI(26018648));
-*/
-	pois.push_back(p.findPoI(7));
-	pois.push_back(p.findPoI(1));
-	pois.push_back(p.findPoI(2));
-	poiss.push_back(p.findPoI(3));
-	poisss.push_back(p.findPoI(3));
-	poissss.push_back(p.findPoI(6));
-
-	Tourist t(1, "dsadsdas", pois);
-	Tourist t2(2, "dsadsdas", poiss);
-	Tourist t3(3, "dsha", poisss);
-	Tourist t4(4, "fjdsho", poissss);
-	p.addTourist(t);
-	p.addTourist(t2);
-	p.addTourist(t3);
-	p.addTourist(t4);
-
-	p.addBus(300);
-	p.addBus(304);
-	p.addBus(303);
-	p.addBus(350);
-
 	features(p);
 
 	cout << endl << "=======================================================================================================" << endl << endl;
