@@ -5,12 +5,14 @@
 
 using namespace std;
 
+//interface of the program to use all of its features
 void features(Company &p)
 {
 	while (true)
 	{
 	  try
 	  {
+		//showing all of the options
 		int option;
 		cout << endl << "Opcoes:" << endl;
 		cout << "1 - Adicionar Autocarro " << endl;
@@ -41,6 +43,7 @@ void features(Company &p)
 		}
 		switch (option)
 		{
+		//add bus
 		case 1: {
 			string id;
 		
@@ -54,6 +57,7 @@ void features(Company &p)
 				cout << "O autocarro " << id << " ja existe." << endl;
 			break;
 		}
+		//add tourist
 		case 2: {
             string nome, id;
 
@@ -72,6 +76,7 @@ void features(Company &p)
 				cout << "O turista com o id " << id << " ja existe." << endl;
 			break;
 		}
+		//remove bus
 		case 3: {
 			string id;
 			cout << "ID do autocarro a remover: ";
@@ -83,6 +88,7 @@ void features(Company &p)
 				cout << "Autocarro " << id << " nao encontrado." << endl;
 			break;
 		}
+		//remove tourist
 		case 4: {
 			string id;
 			cout << "ID do turista a remover: ";
@@ -96,6 +102,7 @@ void features(Company &p)
 				cout << "Turista " << id << " nao encontrado." << endl;
 			break;
 		}
+		//add a Interest point to a tourist
         case 5: {
             string id, poiID;
             cout << "ID do turista ao qual adicionar o ponto de interesse: ";
@@ -104,8 +111,6 @@ void features(Company &p)
 			getline(cin, id);            
             cout << endl;
             cout << "ID do ponto de interesse a adicionar: ";
-//            if (cin.peek() != EOF)
-//				cin.ignore(100000, '\n');
 			getline(cin, poiID);            
             cout << endl;
             vector<Tourist>::iterator it=find(p.getTourists()->begin(), p.getTourists()->end(), Tourist(stoi(id), ""));
@@ -125,6 +130,7 @@ void features(Company &p)
             	cout<< "O id " << id << " nao corresponde a nenhum turista"<<endl;
             break;
         }
+		//remove a interest point to a from a tourist
         case 6:{
             string id, poiID;
             cout << "ID do turista do qual remover o ponto de interesse:";
@@ -133,8 +139,6 @@ void features(Company &p)
 			getline(cin, id);            
             cout << endl;
             cout << "ID do ponto de interesse a remover: ";
-           // if (cin.peek() != EOF)
-				//cin.ignore(100000, '\n');
 			getline(cin, poiID);
             cout << endl;
             PoI poi = PoI(stoi(poiID),0,0);
@@ -149,6 +153,7 @@ void features(Company &p)
 				cout<< "O id indicado nao corresponde a nenhum turista"<<endl;
             break;
         }
+		//remove a road/edge from the map/graph
         case 7: {
         	string id, id1;
         	cout << "ID do ponto de interesse de origem da estrada: ";
@@ -156,9 +161,7 @@ void features(Company &p)
 				cin.ignore(100000, '\n');
 			getline(cin, id);
 			cout << endl;
-			cout << "ID do ponto de interesse de origem da estrada: ";
-//			if (cin.peek() != EOF)
-//				cin.ignore(100000, '\n');
+			cout << "ID do ponto de interesse de fim da estrada: ";
 			getline(cin, id1);
 			cout << endl;
 
@@ -181,6 +184,7 @@ void features(Company &p)
 			p.addUnavailableRoad(edge);
             break;
         }
+		//add a road/edge to the map/graph
         case 8:{
         	string id, id1;
 			cout << "ID do ponto de interesse de origem da estrada: ";
@@ -188,9 +192,7 @@ void features(Company &p)
 				cin.ignore(100000, '\n');
 			getline(cin, id);
 			cout << endl;
-			cout << "ID do ponto de interesse de origem da estrada: ";
-//			if (cin.peek() != EOF)
-//				cin.ignore(100000, '\n');
+			cout << "ID do ponto de interesse de fim da estrada: ";
 			getline(cin, id1);
 			cout << endl;
 			double distance = sqrt(pow(p.findPoI(stoi(id1))->getX() - p.findPoI(stoi(id))->getX(), 2) + pow(p.findPoI(stoi(id1))->getY() - p.findPoI(stoi(id))->getY(), 2));
@@ -199,6 +201,7 @@ void features(Company &p)
 			p.removeUnavailableRoad(edge);
             break;
         }
+		//Combinatory solution with dijkstra
         case 9: {
         	string initial, final;
 			cout << "Ponto de interesse inicial: ";
@@ -249,6 +252,7 @@ void features(Company &p)
 			gv->closeWindow();
 			break;
         }
+		//routes with tourist groups using dijkstra
         case 10:{
         	string initial, final;
         	cout << "Ponto de interesse inicial: ";
@@ -289,6 +293,7 @@ void features(Company &p)
 			gv->closeWindow();
             break;
         }
+		//greedy algorithm with dijkstra
 		case 11: {
         	string initial, final;
 			cout << "Ponto de interesse inicial: ";
@@ -337,6 +342,7 @@ void features(Company &p)
 			gv->closeWindow();
 			break;
         }
+		//cobinatory algorithm using aStar
 		case 12: {
 			string initial, final;
 			cout << "Ponto de interesse inicial: ";
@@ -387,6 +393,7 @@ void features(Company &p)
 			gv->closeWindow();
 			break;
 		}
+		//route with group tourist using aStar
 		case 13:{
 			string initial, final;
 			cout << "Ponto de interesse inicial: ";
@@ -427,6 +434,7 @@ void features(Company &p)
 			gv->closeWindow();
 			break;
 		}
+		//greedy algorithm using aStar
 		case 14: {
 			string initial, final;
 			cout << "Ponto de interesse inicial: ";
@@ -489,6 +497,7 @@ void features(Company &p)
 	}
 }
 
+//interface to choose that map that will be used
 string getMapName()
 {
 	while (true)
@@ -590,12 +599,6 @@ int main()
 	cout << "==========================" << endl;
 
 	string city = getMapName();
-/*
-	GraphViewer * gv = new GraphViewer(600, 600, true);
-	gv->createWindow(600, 600);
-	gv->defineVertexColor("blue");
-	gv->defineEdgeColor("black");
-*/
 	Company p = Company();
 
 	string edgeFile= "T03/" + city + "/T03_Edges_" + city + ".txt";
@@ -603,11 +606,6 @@ int main()
 	string tagsFile= "T03/" + city + "/T03_tags_" + city + ".txt";
 
 	p.initializeGraph(edgeFile, vertexFile, tagsFile);
-
-	vector<PoI*> pois;
-	vector<PoI*> poiss;
-	vector<PoI*> poisss;
-	vector<PoI*> poissss;
 
 	features(p);
 
