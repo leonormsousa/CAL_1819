@@ -171,14 +171,16 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
     }
 }
 
-vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
+vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2, bool aStar)
 {
-    map.AStarShortestPath(point1, point2);
-    //map.dijkstraShortestPath(point1);
+	if(aStar)
+		map.AStarShortestPath(point1, point2);
+	else
+		map.dijkstraShortestPath(point1);
     return map.getPath(point1, point2);
 }
 
-vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
+vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points, bool aStar)
 {
     vector<vector<PoI*> > auxVector;
     vector<PoI*> resp;
@@ -186,7 +188,7 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
         return points;
     for (size_t i=0; i<points.size()-1; i++)
     {
-    	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[i+1]);
+    	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[i+1], aStar);
     	if(poi.size()==0)
 		{
     		vector<PoI*> p = {};
@@ -233,7 +235,7 @@ vector<PoI*> aux = v;
 
 }
 
-vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> points)
+vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> points, bool aStar)
 {
     vector<vector<PoI*> > vectorAux;
     vector<vector<PoI*> > resps;
@@ -253,7 +255,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     {
     	vectorAux[i].insert(vectorAux[i].begin(), point1);
     	vectorAux[i].insert(vectorAux[i].end(), point2);
-		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i]);
+		vector<PoI*> p= calculateRouteWithOrderedPoints(vectorAux[i], aStar);
 		if(p.size()>0)
 			resps.push_back(p);
     }
@@ -273,7 +275,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     return resp;
 }
 
-vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points)
+vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points, bool aStar)
 {
     //initializing variables
     vector <vector<double> > weigths;
@@ -299,14 +301,14 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
         for (size_t j=0; j<=i; j++)
         {
 
-        	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[j]);
+        	vector<PoI*> poi =calculateRouteBetweenTwoPoints(points[i], points[j], aStar);
         	if(poi.size()!=0)
         	{
         		routes[i][j] = poi;
                 weigths[i][j]=getWeight(routes[i][j]);
         	}
 
-    		vector<PoI*> p2 = calculateRouteBetweenTwoPoints(points[j], points[i]);
+    		vector<PoI*> p2 = calculateRouteBetweenTwoPoints(points[j], points[i], aStar);
     		if(p2.size()!=0)
     		{
     			routes[j][i]=p2;
@@ -349,7 +351,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
     return resp;
 }
 
-vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes){
+vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes, bool aStar){
     vector<Tourist> tous=tourists;
     vector<vector<Tourist*> > touristGroups;
 	auto it = tous.begin();
@@ -381,15 +383,15 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
 	return touristGroups;
 }
 
-vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance, PoI* initial, PoI* final){
+vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance, PoI* initial, PoI* final, bool aStar){
     vector<vector<Tourist*> > touristGroups, oldTouristGroups;
     vector<vector <PoI*> > oldRoutes, routes;
-    oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes);
+    oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes, aStar);
     bool breakCycle=false;
     do
     {
         initialTolerance--;
-        touristGroups=createTouristGroups(initialTolerance, routes);
+        touristGroups=createTouristGroups(initialTolerance, routes, aStar);
         if (routes.size()>buses.size())
             break;
         for(size_t i=0; i<touristGroups.size();i++)
@@ -403,7 +405,7 @@ vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTol
     do
     {
         initialTolerance++;
-        touristGroups=createTouristGroups(initialTolerance, routes);
+        touristGroups=createTouristGroups(initialTolerance, routes, aStar);
         if (routes.size()>buses.size())
             break;
         for(size_t i=0; i<touristGroups.size();i++)
@@ -418,7 +420,7 @@ vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTol
     	routes[i].erase( unique(routes[i].begin(), routes[i].end()), routes[i].end());
     	routes[i].insert(routes[i].begin(), initial);
     	routes[i].insert(routes[i].end(), final);
-        routes[i]=calculateRouteWithUnorderedPoints(routes[i]);
+        routes[i]=calculateRouteWithUnorderedPoints(routes[i], aStar);
 
     }
     return routes;

@@ -21,14 +21,17 @@ void features(Company &p)
 		cout << "6 - Remover pontos de interesse de um turista " << endl;
 		cout << "7 - Assinalar uma rua como estando em obras " << endl;
 		cout << "8 - Assinalar as obras de uma determinada rua como terminadas  " << endl;
-		cout << "9 - Calculo do caminho mais curto/rentavel sem grupos " << endl;
-		cout << "10 - Calculo do caminho mais curto/rentavel com grupos limitados " << endl;
-		cout << "11 - Calculo do caminho mais curto/rentavel sem grupos usando algoritmo ganancioso " << endl;
+		cout << "9 - Calculo do caminho mais curto/rentavel sem grupos usando Dijkstra" << endl;
+		cout << "10 - Calculo do caminho mais curto/rentavel com grupos limitados usando Dijkstra " << endl;
+		cout << "11 - Calculo do caminho mais curto/rentavel sem grupos usando algoritmo ganancioso usando Dijkstra " << endl;
+		cout << "12 - Calculo do caminho mais curto/rentavel sem grupos usando A* " << endl;
+		cout << "13 - Calculo do caminho mais curto/rentavel com grupos limitados usando A*" << endl;
+		cout << "14 - Calculo do caminho mais curto/rentavel sem grupos usando algoritmo ganancioso usando A* " << endl;
 		cout << "0 - Exit" << endl << endl;
 		cout << "Opcao? ";
 		cin >> option;
 		option = toupper(option);
-		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11)))
+		while (!cin || ((option != 0) && (option != 1) && (option != 2) && (option != 3) && (option != 4) && (option != 5) && (option != 6) && (option != 7) && (option != 8) && (option !=9) && (option != 10) && (option != 11)&& (option !=12) && (option != 13) && (option != 14)))
 		{
 			cin.clear();
 			cin.ignore(100000, '\n');
@@ -216,7 +219,7 @@ void features(Company &p)
         	points.erase( unique(points.begin(), points.end()), points.end());
 
         	clock_t begin = clock();
-        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
+        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points, false);
         	clock_t end = clock();
 			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
 			cout << "TIME: " << time << "ms" << endl;
@@ -254,8 +257,11 @@ void features(Company &p)
         	cin>>final;
         	PoI* initialPoI = p.findPoI(stoi(initial));
         	PoI* finalPoI = p.findPoI(stoi(final));
-
-        	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(6, initialPoI, finalPoI);
+        	clock_t begin = clock();
+        	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(6, initialPoI, finalPoI, false);
+        	clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
            	GraphViewer * gv = new GraphViewer(600, 600, false);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
@@ -300,7 +306,12 @@ void features(Company &p)
         	sort(points.begin()+1, points.end()-1);
         	points.erase( unique(points.begin(), points.end()), points.end());
 
-        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPointsDynamic(points);
+        	clock_t begin = clock();
+        	vector<PoI*>  routes = p.calculateRouteWithUnorderedPointsDynamic(points, false);
+			clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
+
         	if(routes.size()==0)
         	{
         		cout << "Este algoritmo nao permite calcular um caminho possivel. Tente a opcao 9." << endl;
@@ -326,6 +337,144 @@ void features(Company &p)
 			gv->closeWindow();
 			break;
         }
+		case 12: {
+			string initial, final;
+			cout << "Ponto de interesse inicial: ";
+			cin>>initial;
+			cout << "Ponto de interesse final: ";
+			cin>>final;
+			PoI* initialPoI = p.findPoI(stoi(initial));
+			PoI* finalPoI = p.findPoI(stoi(final));
+
+			vector<PoI*> points;
+			for (size_t i=0; i<(*p.getTourists()).size(); i++)
+				points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
+
+			points.insert(points.begin(), initialPoI);
+			points.insert(points.end(), finalPoI);
+
+			sort(points.begin()+1, points.end()-1);
+			points.erase( unique(points.begin(), points.end()), points.end());
+
+			clock_t begin = clock();
+			vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points, true);
+			clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
+
+			if(routes.size()==0)
+			{
+				cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
+				break;
+			}
+
+			GraphViewer * gv = new GraphViewer(600, 600, false);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
+
+			for (size_t j=0; j<routes.size()-1; j++)
+			{
+				cout << routes[j]->getId() << " -> ";
+				gv->addNode(routes[j]->getId(), routes[j]->getX(), routes[j]->getY());
+				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
+
+			}
+			cout << routes[routes.size()-1]->getId() << endl;
+			gv->addNode(routes[routes.size()-1]->getId(), routes[routes.size()-1]->getX(),routes[routes.size()-1]->getY());
+			gv->rearrange();
+			sleep(7);
+			gv->closeWindow();
+			break;
+		}
+		case 13:{
+			string initial, final;
+			cout << "Ponto de interesse inicial: ";
+			cin>>initial;
+			cout << "Ponto de interesse final: ";
+			cin>>final;
+			PoI* initialPoI = p.findPoI(stoi(initial));
+			PoI* finalPoI = p.findPoI(stoi(final));
+			clock_t begin = clock();
+			vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(6, initialPoI, finalPoI, true);
+			clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
+			GraphViewer * gv = new GraphViewer(600, 600, false);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
+			for (size_t i=0; i<routes.size(); i++)
+			{
+				if(routes[i].size()==0)
+				{
+					cout << "Nao foi possivel encontrar um percurso a passar pelos pontos inicial e final indicados para alguns dos turistas"<< endl;
+					continue;
+				}
+
+				for (size_t j=0; j<routes[i].size()-1; j++)
+				{
+					cout << routes[i][j]->getId() << " -> ";
+					gv->addNode(routes[i][j]->getId(), routes[i][j]->getX(), routes[i][j]->getY());
+					gv->addEdge(routes[i][j]->getId(), routes[i][j]->getId(),routes[i][j+1]->getId(), 0);
+				}
+				cout << routes[i][routes[i].size()-1]->getId() << endl;
+				gv->addNode(routes[i][routes[i].size()-1]->getId(),routes[i][routes[i].size()-1]->getX(),routes[i][routes[i].size()-1]->getY());
+				gv->rearrange();
+
+			}
+			sleep(7);
+			gv->closeWindow();
+			break;
+		}
+		case 14: {
+			string initial, final;
+			cout << "Ponto de interesse inicial: ";
+			cin>>initial;
+			cout << "Ponto de interesse final: ";
+			cin>>final;
+			PoI* initialPoI = p.findPoI(stoi(initial));
+			PoI* finalPoI = p.findPoI(stoi(final));
+			vector<PoI*> points;
+			for (size_t i=0; i<(*p.getTourists()).size(); i++)
+				points.insert(points.end(), (*(*(p.getTourists()))[i].getPoIs()).begin(), (*(*p.getTourists())[i].getPoIs()).end());
+
+			points.insert(points.begin(), initialPoI);
+			points.insert(points.end(), finalPoI);
+			sort(points.begin()+1, points.end()-1);
+			points.erase( unique(points.begin(), points.end()), points.end());
+
+			clock_t begin = clock();
+			vector<PoI*>  routes = p.calculateRouteWithUnorderedPointsDynamic(points, true);
+			clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
+
+			if(routes.size()==0)
+			{
+				cout << "Este algoritmo nao permite calcular um caminho possivel. Tente a opcao 9." << endl;
+				break;
+			}
+
+			GraphViewer * gv = new GraphViewer(600, 600, false);
+			gv->createWindow(600, 600);
+			gv->defineVertexColor("blue");
+			gv->defineEdgeColor("black");
+
+			for (size_t j=0; j<routes.size()-1; j++)
+			{
+				cout << routes[j]->getId() << " -> ";
+				gv->addNode(routes[j]->getId(), routes[j]->getX(), routes[j]->getY());
+				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
+
+			}
+			cout << routes[routes.size()-1]->getId() << endl;
+			gv->addNode(routes[routes.size()-1]->getId(), routes[routes.size()-1]->getX(), routes[routes.size()-1]->getY());
+			gv->rearrange();
+			sleep(7);
+			gv->closeWindow();
+			break;
+		}
 		case 0:{
 			return;
 		}
@@ -460,7 +609,7 @@ int main()
 	vector<PoI*> poisss;
 	vector<PoI*> poissss;
 
-	//pois.push_back(p.findPoI(994136199));
+/*	//pois.push_back(p.findPoI(994136199));
 	pois.push_back(p.findPoI(994138487));
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
@@ -475,14 +624,14 @@ int main()
 	poissss.push_back(p.findPoI(26018644));
 	poissss.push_back(p.findPoI(26018646));
 	poissss.push_back(p.findPoI(26018648));
-/*
+*/
 	pois.push_back(p.findPoI(7));
 	pois.push_back(p.findPoI(1));
 	pois.push_back(p.findPoI(2));
 	poiss.push_back(p.findPoI(3));
 	poisss.push_back(p.findPoI(3));
 	poissss.push_back(p.findPoI(6));
-*/
+
 	Tourist t(1, "dsadsdas", pois);
 	Tourist t2(2, "dsadsdas", poiss);
 	Tourist t3(3, "dsha", poisss);

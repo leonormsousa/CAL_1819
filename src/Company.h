@@ -27,15 +27,15 @@ public:
     bool addTourist(Tourist t);
 
     void initializeGraph(string edgeFile, string vertexFile, string tagFile);
-    vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2);
+    vector<PoI*> calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2, bool aStar);
     int findPoIindex(int id);
-    vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points);
+    vector<PoI*> calculateRouteWithOrderedPoints(vector<PoI*> points, bool aStar);
 	void dfs(const vector<PoI*>& v, vector<vector<PoI*> > &res);
 	double getWeight(vector<PoI*> pois);
-    vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points);
-    vector<PoI*> calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points);
-    vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes);
-    vector<vector <PoI*> > createGroupsBasedOnBuses(unsigned int tolerance, PoI* initial, PoI* final);
+    vector<PoI*> calculateRouteWithUnorderedPoints (vector<PoI*> points, bool aStar);
+    vector<PoI*> calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points, bool aStar);
+    vector<vector<Tourist*> > createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes, bool aStar);
+    vector<vector <PoI*> > createGroupsBasedOnBuses(unsigned int tolerance, PoI* initial, PoI* final, bool aStar);
     PoI* findPoI(int id);
     Vertex<PoI*>* findVertex(int id);
     vector<Edge<PoI*>> getUnavailableRoads();

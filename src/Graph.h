@@ -296,7 +296,7 @@ bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 */
 template<class T>
 bool Graph<T>::relaxAStar(Vertex<T> *v, Vertex<T> *w, double weight, const T &dest) {
-	if (v->dist + weight - euclidiandistance(v->getInfo(), dest) + euclidiandistance(w->getInfo(), dest) < w->dist) {
+	if ((v->dist + weight - euclidiandistance(v->getInfo(), dest) + euclidiandistance(w->getInfo(), dest)) < w->dist) {
 		w->dist = v->dist + weight - euclidiandistance(v->getInfo(), dest) + euclidiandistance(w->getInfo(), dest);
 		w->path = v;
 		return true;
@@ -342,7 +342,7 @@ void Graph<T>::AStarShortestPath(const T &origin, const T &dest) {
 		if(v->getInfo() == dest)
 			return;
 		for (auto e : v->outgoing) {
-			auto oldDist = e->dest->dist;// + euclidiandistance(v->getInfo(), e->dest->getInfo());
+			auto oldDist = e->dest->dist;
 			if (relaxAStar(v, e->dest, e->weight, dest)) {
 				if (oldDist == INF)
 					q.insert(e->dest);
