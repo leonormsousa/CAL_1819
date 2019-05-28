@@ -476,7 +476,7 @@ int main()
 	p.addTourist(t);
 	p.addTourist(t2);
 	p.addTourist(t3);
-	//p.addTourist(t4);
+	p.addTourist(t4);
 
 	p.addBus(300);
 	p.addBus(304);

@@ -335,6 +335,8 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
                 min_choice=j;
             }
         }
+        if (min_choice == 0)
+        	return {};
         auxr = routes[starting_point][min_choice];
         auxr.erase(auxr.begin());
         resp.insert(resp.end(),auxr.begin(), auxr.end());
