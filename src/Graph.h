@@ -161,10 +161,12 @@ public:
 	void addEdge(Edge<T> edge);
 	void removeEdge(Edge<T> edge);
 	void dijkstraShortestPath(const T &origin);
-	void AStarShortestPath(const T &origin);
+	void AStarShortestPath(const T &origin, const T &dest);
 	float euclidiandistance(const T &origin, const T &destination);
 	Vertex<T> * initSingleSource(const T &origin);
+	Vertex<T> * initSingleSourceAStar(const T &origin, const T &dest);
 	bool relax(Vertex<T> *v, Vertex<T> *w, double weight);
+	bool relaxAStar(Vertex<T> *v, Vertex<T> *w, double weight, const T &dest);
 	vector<T> getPath(const T &origin, const T &dest) const;
 
 };
@@ -253,6 +255,25 @@ Vertex<T> * Graph<T>::initSingleSource(const T &origin) {
 }
 
 /**
+* Initializes single-source shortest path data (path, dist).
+* Receives the content of the source vertex and returns a pointer to the source vertex.
+* Used by all single-source shortest path algorithms.
+*/
+template<class T>
+Vertex<T> * Graph<T>::initSingleSourceAStar(const T &origin, const T &dest) {
+
+	for (unsigned int i=0; i< vertexSet.size(); i++){
+		vertexSet[i]->dist = INF;
+		vertexSet[i]->path = nullptr;
+	}
+	Vertex<T>* s = findVertex(origin);
+
+	if(s!=nullptr)
+		s->dist = euclidiandistance(origin, dest);
+	return s;
+}
+
+/**
 * Analyzes an edge in single-source shortest path algorithm.
 * Returns true if the target vertex was relaxed (dist, path).
 * Used by all single-source shortest path algorithms.
@@ -261,6 +282,22 @@ template<class T>
 bool Graph<T>::relax(Vertex<T> *v, Vertex<T> *w, double weight) {
 	if (v->dist + weight < w->dist) {
 		w->dist = v->dist + weight;
+		w->path = v;
+		return true;
+	}
+	else
+		return false;
+}
+
+/**
+* Analyzes an edge in single-source shortest path algorithm.
+* Returns true if the target vertex was relaxed (dist, path).
+* Used by all single-source shortest path algorithms.
+*/
+template<class T>
+bool Graph<T>::relaxAStar(Vertex<T> *v, Vertex<T> *w, double weight, const T &dest) {
+	if (v->dist + weight - euclidiandistance(v->getInfo(), dest) + euclidiandistance(w->getInfo(), dest) < w->dist) {
+		w->dist = v->dist + weight - euclidiandistance(v->getInfo(), dest) + euclidiandistance(w->getInfo(), dest);
 		w->path = v;
 		return true;
 	}
@@ -296,15 +333,17 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 * A* algorithm.
 */
 template<class T>
-void Graph<T>::AStarShortestPath(const T &origin) {
-	auto s = initSingleSource(origin);
+void Graph<T>::AStarShortestPath(const T &origin, const T &dest) {
+	auto s = initSingleSourceAStar(origin, dest);
 	MutablePriorityQueue<Vertex<T>> q;
 	q.insert(s);
 	while (!q.empty()) {
 		auto v = q.extractMin();
+		if(v->getInfo() == dest)
+			return;
 		for (auto e : v->outgoing) {
-			auto oldDist = e->dest->dist + euclidiandistance(v->getInfo(), e->dest->getInfo());
-			if (relax(v, e->dest, e->weight)) {
+			auto oldDist = e->dest->dist;// + euclidiandistance(v->getInfo(), e->dest->getInfo());
+			if (relaxAStar(v, e->dest, e->weight, dest)) {
 				if (oldDist == INF)
 					q.insert(e->dest);
 				else
@@ -331,7 +370,6 @@ vector<T> Graph<T>::getPath(const T &origin, const T &dest) const {
 	auto v = findVertex(dest);
 	if (v == nullptr || v->dist == INF)
 		 return res;
-
 
 	while(v != nullptr)
 	{

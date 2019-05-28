@@ -173,7 +173,8 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
-    map.AStarShortestPath(point1);
+    map.AStarShortestPath(point1, point2);
+    //map.dijkstraShortestPath(point1);
     return map.getPath(point1, point2);
 }
 

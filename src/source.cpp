@@ -215,7 +215,12 @@ void features(Company &p)
         	sort(points.begin()+1, points.end()-1);
         	points.erase( unique(points.begin(), points.end()), points.end());
 
+        	clock_t begin = clock();
         	vector<PoI*>  routes = p.calculateRouteWithUnorderedPoints(points);
+        	clock_t end = clock();
+			double time = (end - begin)/(CLOCKS_PER_SEC/1000);
+			cout << "TIME: " << time << "ms" << endl;
+
         	if(routes.size()==0)
         	{
         		cout << "Nao existe um caminho possivel para passar em todos os pontos selecionados" << endl;
@@ -262,6 +267,7 @@ void features(Company &p)
         			cout << "Nao foi possivel encontrar um percurso a passar pelos pontos inicial e final indicados para alguns dos turistas"<< endl;
         			continue;
         		}
+
 				for (size_t j=0; j<routes[i].size()-1; j++)
 				{
 					cout << routes[i][j]->getId() << " -> ";
@@ -269,11 +275,12 @@ void features(Company &p)
 					gv->addEdge(routes[i][j]->getId(), routes[i][j]->getId(),routes[i][j+1]->getId(), 0);
 				}
 				cout << routes[i][routes[i].size()-1]->getId() << endl;
-				gv->addNode(routes[i][routes.size()-1]->getId(),routes[i][routes.size()-1]->getX(),routes[i][routes.size()-1]->getY());
+				gv->addNode(routes[i][routes[i].size()-1]->getId(),routes[i][routes[i].size()-1]->getX(),routes[i][routes[i].size()-1]->getY());
 				gv->rearrange();
-				sleep(7);
-				gv->closeWindow();
+
 			}
+        	sleep(7);
+			gv->closeWindow();
             break;
         }
 		case 11: {
@@ -468,14 +475,14 @@ int main()
 	poissss.push_back(p.findPoI(26018644));
 	poissss.push_back(p.findPoI(26018646));
 	poissss.push_back(p.findPoI(26018648));
-
-	/*pois.push_back(p.findPoI(7));
-		pois.push_back(p.findPoI(1));
-		pois.push_back(p.findPoI(2));
-		poiss.push_back(p.findPoI(3));
-		poisss.push_back(p.findPoI(3));
-		poissss.push_back(p.findPoI(6));*/
-
+/*
+	pois.push_back(p.findPoI(7));
+	pois.push_back(p.findPoI(1));
+	pois.push_back(p.findPoI(2));
+	poiss.push_back(p.findPoI(3));
+	poisss.push_back(p.findPoI(3));
+	poissss.push_back(p.findPoI(6));
+*/
 	Tourist t(1, "dsadsdas", pois);
 	Tourist t2(2, "dsadsdas", poiss);
 	Tourist t3(3, "dsha", poisss);

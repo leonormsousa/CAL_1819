@@ -1,6 +1,7 @@
 #include "Bus.h"
 #include "Graph.h"
 #include <fstream>
+#include <ctime>
 
 class Company{
 private:
