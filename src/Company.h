@@ -5,13 +5,17 @@
 
 class Company{
 private:
+    //graph containing all the interest points (vertex) and the streets connecting them (edges) 
     Graph<PoI*> map;
-    PoI* initialPoint;
+    //vector containing all of the company buses
     vector<Bus> buses;
+    //vector containing all the tourist/clients
     vector<Tourist> tourists;
+    //vector containing all the interest points
     vector<PoI> pois;
+    //vector containing all the unavailableRoads (edges that must be removed)
     vector<Edge<PoI*>> unavailableRoads;
-    vector <vector <Tourist *> > tourist_groups;
+    //capacity of the company buses
     unsigned int busesCapacity;
 public:
 	Company(vector<Tourist> t = {}, vector<Bus> b = {}, unsigned int capacity = 20);
@@ -20,7 +24,6 @@ public:
     bool removeBus(int id);
     bool addTourist(int id, string nome);
     bool removeTourist(int id);
-    PoI* getinitialPoint();
     vector<Tourist>* getTourists();
     bool addUnavailableRoad(Edge<PoI*>);
     bool removeUnavailableRoad(Edge<PoI*>);

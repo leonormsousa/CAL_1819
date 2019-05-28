@@ -1,18 +1,20 @@
 #include "Company.h"
 #include <iterator>
 
+//Company constructor
 Company::Company(vector<Tourist> t, vector<Bus> b, unsigned int capacity)
 {
 	tourists = t;
 	buses = b;
 	busesCapacity = capacity;
 }
-    
+
+//returns a vector containing all the unavailable roads/edges    
 vector<Edge<PoI*>> Company::getUnavailableRoads(){
 	return unavailableRoads;
 }
 
-
+//adds a Bus with the ID id to the vector of buses of the company
 bool Company::addBus(int id)
 {
     Bus b(id);
@@ -26,6 +28,7 @@ bool Company::addBus(int id)
 	return false;
 }
     
+//removes the bus with the ID id from the vector of buses of the company
 bool Company::removeBus(int id)
 {
     auto it = find(buses.begin(), buses.end(), Bus(id));
@@ -37,6 +40,7 @@ bool Company::removeBus(int id)
 	return false;
 }
 
+//adds a Tourist with the ID id and the Name name to the vector of tourists of the company
 bool Company::addTourist(int id, string name)
 {
 	Tourist t(id, name);
@@ -50,6 +54,7 @@ bool Company::addTourist(int id, string name)
 	return false;
 }
 
+//adds the Tourist t to the vector of tourists of the company
 bool Company::addTourist(Tourist t)
 {
 	auto it = find(tourists.begin(), tourists.end(), t);
@@ -61,6 +66,7 @@ bool Company::addTourist(Tourist t)
 	return false;
 }
     
+//removes the tourist with the ID id from the vector of tourists of the company
 bool Company::removeTourist(int id)
 {
     auto it=find(tourists.begin(), tourists.end(), Tourist(id, ""));
@@ -72,10 +78,7 @@ bool Company::removeTourist(int id)
     return false;
 }
 
-PoI* Company::getinitialPoint(){
-	return initialPoint;
-}
-
+//returns the index (from the vector pois) of the PoI with the ID id
 int Company::findPoIindex(int id)
 {
     for(size_t i=0; i<pois.size();i++)
@@ -86,15 +89,18 @@ int Company::findPoIindex(int id)
     return -1;
 }
 
+//return the vector of PoIs of the company
 vector<PoI> Company::getPois(){
     return pois;
 }
 
+//return the vector of tourist of the company
 vector<Tourist>* Company::getTourists(){
     return &tourists;
 }
 
-
+//initializes the graph map and the vector pois of the company and the vector pois
+//using the data stored in the edgesFile, vertexFile and tagFile
 void Company::initializeGraph(string edgesFile, string vertexFile, string tagFile){
     ifstream edges;
     edges.open(edgesFile);
@@ -123,9 +129,6 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
         PoI* vertex = new PoI(stoi(id),stod(src),stod(dest));
         pois.push_back(*vertex);
-        if(i==0)
-        	initialPoint=vertex;
-
         map.addVertex(vertex);
     }
 
@@ -171,6 +174,8 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
     }
 }
 
+//calculates the route between two points
+//uses AStar or Dijkstra depending on aStar being true or false
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2, bool aStar)
 {
 	if(aStar)
@@ -180,6 +185,7 @@ vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2, b
     return map.getPath(point1, point2);
 }
 
+//calculates a route between several points in the given order
 vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points, bool aStar)
 {
     vector<vector<PoI*> > auxVector;
@@ -209,6 +215,7 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points, bool 
     return resp;
 }
 
+//calculates a Weigth of a (ordered) route (pois)
 double Company::getWeight(vector<PoI*> pois)
 {
     double resp=0;
@@ -222,6 +229,7 @@ double Company::getWeight(vector<PoI*> pois)
 	return resp;
 }
 
+//calculates every combination using all the points in v, returning the answer via res
 void Company::getPaths(const vector<PoI*>& v, vector<vector<PoI*> > &res)
 {
 	vector<PoI*> aux = v;
@@ -233,8 +241,10 @@ void Company::getPaths(const vector<PoI*>& v, vector<vector<PoI*> > &res)
 	while (next_permutation(aux.begin(), aux.end()));
 }
 
+//calculates the route between several unordered points using a combinatorial algorithm
 vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> points, bool aStar)
 {
+    //initializing variables
     vector<vector<PoI*> > vectorAux;
     vector<vector<PoI*> > resps;
     vector<PoI*> resp;
@@ -245,10 +255,12 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     PoI* point1= points[0];
     PoI* point2 = points[points.size()-1];
 
+    //geting every combination of points
     vector<PoI*> aux;
     auxp.erase(auxp.begin());
     auxp.erase(auxp.end()-1);
     getPaths(auxp, vectorAux);
+    //calculating for every combination the best route
     for (size_t i=0; i<vectorAux.size(); i++)
     {
     	vectorAux[i].insert(vectorAux[i].begin(), point1);
@@ -273,6 +285,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     return resp;
 }
 
+//calculates the route between several unordered points using a dynamic programming and a greedy algorithm
 vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI*> points, bool aStar)
 {
     //initializing variables
@@ -349,6 +362,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
     return resp;
 }
 
+//creates groups of tourists based on the tolerance value; uses a greedy strategy
 vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, vector<vector <PoI*> > &routes, bool aStar){
     vector<Tourist> tous=tourists;
     vector<vector<Tourist*> > touristGroups;
@@ -381,11 +395,14 @@ vector<vector<Tourist*> > Company::createTouristGroups(unsigned int tolerance, v
 	return touristGroups;
 }
 
+//creates groups of tourist, improving the groups based on the result of 
+//calling createTouristGroups with different tolerances
 vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTolerance, PoI* initial, PoI* final, bool aStar){
     vector<vector<Tourist*> > touristGroups, oldTouristGroups;
     vector<vector <PoI*> > oldRoutes, routes;
     oldTouristGroups = createTouristGroups(initialTolerance, oldRoutes, aStar);
     bool breakCycle=false;
+    //decreasing tolerance to garantee the groups fit in the buses
     do
     {
         initialTolerance--;
@@ -400,6 +417,7 @@ vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTol
    oldTouristGroups= touristGroups;
    oldRoutes=routes;
    routes.clear();
+   //increasing tolerance to garantee we don't get almost empty buses
     do
     {
         initialTolerance++;
@@ -411,7 +429,7 @@ vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTol
                 breakCycle=true;
     }while ((touristGroups.size()<oldTouristGroups.size()) && (!breakCycle));
 
-
+    //calculating the routes for the tourist groups
     for (size_t i=0; i<routes.size(); i++)
     {
     	sort(routes[i].begin(), routes[i].end());
@@ -424,6 +442,7 @@ vector< vector<PoI*> > Company::createGroupsBasedOnBuses(unsigned int initialTol
     return routes;
 }
 
+//adds the Edge edge to the unavailableRoads vector
 bool Company::addUnavailableRoad(Edge<PoI*> edge){
 	vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
 	if(it==unavailableRoads.end()){
@@ -433,7 +452,9 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 	}
 	return false;
 }
- bool Company::removeUnavailableRoad(Edge<PoI*> edge){
+
+//removes the Edge edge from the unavailableRoads vector
+bool Company::removeUnavailableRoad(Edge<PoI*> edge){
 	 vector<Edge<PoI*>>::iterator it = find(unavailableRoads.begin(), unavailableRoads.end(), edge);
 	 	if(it!=unavailableRoads.end()){
 	 		map.addEdge(edge);
@@ -441,7 +462,9 @@ bool Company::addUnavailableRoad(Edge<PoI*> edge){
 	 		return true;
 	 	}
 	 	return false;
- }
+}
+
+//returns a pointer to the PoI with the ID id
 PoI* Company::findPoI(int id)
 {
 	PoI poi = PoI(id, 0, 0);
@@ -451,6 +474,7 @@ PoI* Company::findPoI(int id)
     return &(*it);
 }
 
+//return a pointer to the vertex wich PoI as the ID id
 Vertex<PoI*>* Company::findVertex(int id){
 	PoI* p1 = findPoI(id);
 	if(p1==nullptr)
