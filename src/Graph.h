@@ -303,12 +303,12 @@ void Graph<T>::AStarShortestPath(const T &origin) {
 	while (!q.empty()) {
 		auto v = q.extractMin();
 		for (auto e : v->outgoing) {
-			auto oldDist = e.dest->dist + euclidiandistance(v, e);
-			if (relax(v, e.dest, e.weight)) {
+			auto oldDist = e->dest->dist + euclidiandistance(v->getInfo(), e->dest->getInfo());
+			if (relax(v, e->dest, e->weight)) {
 				if (oldDist == INF)
-					q.insert(e.dest);
+					q.insert(e->dest);
 				else
-					q.decreaseKey(e.dest);
+					q.decreaseKey(e->dest);
 			}
 		}
 	}
@@ -319,7 +319,7 @@ void Graph<T>::AStarShortestPath(const T &origin) {
 */
 template<class T>
 float Graph<T>::euclidiandistance(const T &origin, const T &destination) {
-	return sqrt(pow(destination.getX() - origin.getX(), 2) + pow(destination.getX() - origin.getY(), 2));
+	return sqrt(pow(destination->getX() - origin->getX(), 2) + pow(destination->getX() - origin->getY(), 2));
 }
 
 /**

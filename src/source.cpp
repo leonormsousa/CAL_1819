@@ -222,7 +222,7 @@ void features(Company &p)
         		break;
         	}
 
-        	GraphViewer * gv = new GraphViewer(600, 600, true);
+        	GraphViewer * gv = new GraphViewer(600, 600, false);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
 			gv->defineEdgeColor("black");
@@ -230,12 +230,13 @@ void features(Company &p)
 			for (size_t j=0; j<routes.size()-1; j++)
 			{
 				cout << routes[j]->getId() << " -> ";
-				gv->addNode(routes[j]->getId());
+				gv->addNode(routes[j]->getId(), routes[j]->getX(), routes[j]->getY());
 				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
 
 			}
 			cout << routes[routes.size()-1]->getId() << endl;
-			gv->addNode(routes[routes.size()-1]->getId());
+			cout << "Final weigth of route: " << p.getWeight(routes) << endl;
+			gv->addNode(routes[routes.size()-1]->getId(), routes[routes.size()-1]->getX(), routes[routes.size()-1]->getY());
 			gv->rearrange();
 			sleep(7);
 			gv->closeWindow();
@@ -251,7 +252,7 @@ void features(Company &p)
         	PoI* finalPoI = p.findPoI(stoi(final));
 
         	vector< vector<PoI*> > routes =  p.createGroupsBasedOnBuses(6, initialPoI, finalPoI);
-           	GraphViewer * gv = new GraphViewer(600, 600, true);
+           	GraphViewer * gv = new GraphViewer(600, 600,false);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
 			gv->defineEdgeColor("black");
@@ -265,11 +266,11 @@ void features(Company &p)
 				for (size_t j=0; j<routes[i].size()-1; j++)
 				{
 					cout << routes[i][j]->getId() << " -> ";
-					gv->addNode(routes[i][j]->getId());
+					gv->addNode(routes[i][j]->getId(), routes[i][j]->getX(), routes[i][j]->getY());
 					gv->addEdge(routes[i][j]->getId(), routes[i][j]->getId(),routes[i][j+1]->getId(), 0);
 				}
 				cout << routes[i][routes[i].size()-1]->getId() << endl;
-				gv->addNode(routes[i][routes.size()-1]->getId());
+				gv->addNode(routes[i][routes.size()-1]->getId(), routes[i][routes.size()-1]->getX(), routes[i][routes.size()-1]->getY());
 				gv->rearrange();
 				sleep(7);
 				gv->closeWindow();
@@ -300,7 +301,7 @@ void features(Company &p)
         		break;
         	}
 
-        	GraphViewer * gv = new GraphViewer(600, 600, true);
+        	GraphViewer * gv = new GraphViewer(600, 600, false);
 			gv->createWindow(600, 600);
 			gv->defineVertexColor("blue");
 			gv->defineEdgeColor("black");
@@ -308,12 +309,13 @@ void features(Company &p)
 			for (size_t j=0; j<routes.size()-1; j++)
 			{
 				cout << routes[j]->getId() << " -> ";
-				gv->addNode(routes[j]->getId());
+				gv->addNode(routes[j]->getId(), routes[j]->getX(), routes[j]->getY());
 				gv->addEdge(routes[j]->getId(), routes[j]->getId(),routes[j+1]->getId(), 0);
 
 			}
 			cout << routes[routes.size()-1]->getId() << endl;
-			gv->addNode(routes[routes.size()-1]->getId());
+			cout << "Final weigth of route: " << p.getWeight(routes) << endl;
+			gv->addNode(routes[routes.size()-1]->getId(), routes[routes.size()-1]->getX(), routes[routes.size()-1]->getY());
 			gv->rearrange();
 			sleep(7);
 			gv->closeWindow();
@@ -435,7 +437,7 @@ int main()
 
 	string city = getMapName();
 /*
-	GraphViewer * gv = new GraphViewer(600, 600, true);
+	GraphViewer * gv = new GraphViewer(600, 600, false);
 	gv->createWindow(600, 600);
 	gv->defineVertexColor("blue");
 	gv->defineEdgeColor("black");
@@ -453,7 +455,7 @@ int main()
 	vector<PoI*> poisss;
 	vector<PoI*> poissss;
 
-	//pois.push_back(p.findPoI(994136199));
+	/*//pois.push_back(p.findPoI(994136199));
 	pois.push_back(p.findPoI(994138487));
 	pois.push_back(p.findPoI(994137873));
 	pois.push_back(p.findPoI(994136619));
@@ -476,7 +478,23 @@ int main()
 	//p.addTourist(t);
 	//p.addTourist(t2);
 	//p.addTourist(t3);
-	//p.addTourist(t4);
+	//p.addTourist(t4);*/
+
+	pois.push_back(p.findPoI(7));
+	pois.push_back(p.findPoI(1));
+	pois.push_back(p.findPoI(2));
+	poiss.push_back(p.findPoI(3));
+	poisss.push_back(p.findPoI(3));
+	poissss.push_back(p.findPoI(6));
+
+	Tourist t(1, "dsadsdas", pois);
+	Tourist t2(2, "dsadsdas", poiss);
+	Tourist t3(3, "dsha", poisss);
+	Tourist t4(4, "fjdsho", poissss);
+	p.addTourist(t);
+	p.addTourist(t2);
+	p.addTourist(t3);
+	p.addTourist(t4);
 
 	p.addBus(300);
 	p.addBus(304);

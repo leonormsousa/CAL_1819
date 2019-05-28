@@ -173,7 +173,7 @@ void Company::initializeGraph(string edgesFile, string vertexFile, string tagFil
 
 vector<PoI*> Company::calculateRouteBetweenTwoPoints(PoI *point1, PoI *point2)
 {
-    map.dijkstraShortestPath(point1);
+    map.AStarShortestPath(point1);
     return map.getPath(point1, point2);
 }
 
@@ -181,7 +181,7 @@ vector<PoI*> Company::calculateRouteWithOrderedPoints(vector<PoI*> points)
 {
     vector<vector<PoI*> > auxVector;
     vector<PoI*> resp;
-    if (points.size()<=2)
+    if (points.size()<2)
         return points;
     for (size_t i=0; i<points.size()-1; i++)
     {
@@ -238,7 +238,7 @@ vector<PoI*> Company::calculateRouteWithUnorderedPoints (const vector<PoI*> poin
     vector<vector<PoI*> > resps;
     vector<PoI*> resp;
     vector<PoI*> auxp=points;
-    if (points.size()<=2)
+    if (points.size()<2)
         return points;
 
     PoI* point1= points[0];
@@ -304,6 +304,8 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
         		routes[i][j] = poi;
                 weigths[i][j]=getWeight(routes[i][j]);
         	}
+        	else
+        		weigths[i][j]=0;
 
     		vector<PoI*> p2 = calculateRouteBetweenTwoPoints(points[j], points[i]);
     		if(p2.size()!=0)
@@ -311,6 +313,8 @@ vector<PoI*> Company::calculateRouteWithUnorderedPointsDynamic (const vector<PoI
     			routes[j][i]=p2;
     			weigths[j][i]=getWeight(routes[j][i]);
     		}
+    		else
+    		    weigths[j][i]=0;
 
         }
     }
